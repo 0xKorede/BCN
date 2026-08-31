@@ -1,0 +1,46 @@
+import React from "react";
+import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { BcnLogo } from "@/components/ui/BcnLogo";
+
+export const Footer: React.FC = () => {
+  return (
+    <footer className="w-full bg-black/10 backdrop-blur-md backdrop-saturate-150 border-t border-white/15 py-8 sm:py-10 relative z-10 text-[#DFD8CE] shadow-[0_-6px_25px_rgba(255,132,0,0.08)]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+
+          {/* Logo — increased a bit */}
+          <div className="shrink-0">
+            <BcnLogo type="mark" size="md" variant="transparent" />
+          </div>
+
+          {/* Copyright content — replaced tagline in the center */}
+          <p className="text-xs sm:text-sm font-normal text-[#8C857B] text-center order-last md:order-none">
+            © {new Date().getFullYear()} Building Creatives Network (BCN). All rights reserved.
+          </p>
+
+          {/* Social icons */}
+          <div className="flex items-center gap-3 shrink-0">
+            {[
+              { href: "https://facebook.com",  label: "Facebook",    Icon: Facebook  },
+              { href: "https://twitter.com",   label: "Twitter / X", Icon: Twitter   },
+              { href: "https://instagram.com", label: "Instagram",   Icon: Instagram },
+              { href: "https://linkedin.com",  label: "LinkedIn",    Icon: Linkedin  },
+            ].map(({ href, label, Icon }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="w-9 h-9 rounded-full bg-[#1A1A1A] border border-white/5 flex items-center justify-center text-[#BFB9B0] hover:text-bcn-amber hover:border-bcn-orange/50 hover:bg-bcn-orange/10 transition-all duration-200"
+              >
+                <Icon className="w-4 h-4" />
+              </a>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </footer>
+  );
+};
