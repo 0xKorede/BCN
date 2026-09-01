@@ -75,7 +75,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "BCN Hangout 2026 | Creators with a Difference",
     description:
-      "Join tech innovators, designers, developers & digital creators in Lokoja on Saturday, September 19, 2026 for practical skill conversations, intentional networking, and spiritual impact.",
+      "Join innovators, designers, developers & digital creators in Lokoja on Saturday, September 19, 2026 for practical skill conversations, intentional networking, and spiritual impact.",
     url: SITE_URL,
     siteName: "Building Creatives Network (BCN)",
     images: [
@@ -101,7 +101,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "BCN Hangout 2026 | Creators with a Difference",
     description:
-      "Join tech innovators, designers, developers & digital creators in Lokoja on September 19, 2026. Practical skills, networking, and spiritual impact.",
+      "Join innovators, designers, developers & digital creators in Lokoja on September 19, 2026. Practical skills, networking, and spiritual impact.",
     site: "@bcnetwork",
     creator: "@bcnetwork",
     images: [

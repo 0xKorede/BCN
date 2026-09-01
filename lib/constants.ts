@@ -26,7 +26,7 @@ export const HOST: SpeakerEntry = {
   name: "Mr. Samuel Oboh",
   role: "Host",
   photo: "/images/speakers/samuel-oboh.png",
-  bio: "Samuel Oboh is the driving force behind Building Creatives Network. A passionate community builder and creative professional, he brings energy, vision, and a heart for raising the next generation of African innovators to every BCN Hangout.",
+  bio: "Samuel Oboh is the driving force behind Building Creatives Network and the CEO of Reflection Pro Frames. A passionate community builder and creative professional, he brings energy, vision, and a heart for raising the next generation of African innovators to every BCN Hangout.",
   socials: { instagram: "#", twitter: "#", linkedin: "#" },
 };
 
@@ -52,7 +52,7 @@ export const SPEAKERS: SpeakerEntry[] = [
     name: "Mr. Gideon Bello",
     role: "Speaker",
     photo: "/images/speakers/gideon-bello.png",
-    bio: "Add Mr. Gideon Bello's bio here — background, area of expertise, and what they bring to BCN.",
+    bio: "Gideon Bello is an educator, technology entrepreneur, preacher, Christian communicator, and content creator dedicated to leveraging knowledge, technology, and digital media to influence the next generation for good. He is the Founder of Ambassadors Coding Academy, an initiative equipping children and teenagers with practical digital skills, including coding, web development, and Python programming. Passionate about Christian apologetics and the intellectual formation of young minds, Gideon champions the thoughtful and compelling communication of faith at the intersection of education, technology, parenting, and digital culture. He is happily married.",
     socials: {},
   },
   {
