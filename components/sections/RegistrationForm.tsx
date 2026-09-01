@@ -95,8 +95,8 @@ export const RegistrationForm: React.FC = () => {
                   <Sparkles className="w-4 h-4 text-bcn-orange" />
                   See you {EVENT_DATE} at {EVENT_VENUE}.
                 </p>
-                <p className="text-xs text-[#A39C90] pt-2 max-w-sm mx-auto">
-                  A confirmation email has been logged. Get ready for practical conversations &amp; intentional connections!
+                <p className="text-sm text-[#DFD8CE] pt-2 max-w-sm mx-auto">
+                  Check your email for your ticket and QR code.
                 </p>
               </div>
 

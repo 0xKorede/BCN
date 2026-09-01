@@ -44,7 +44,7 @@ export const SPEAKERS: SpeakerEntry[] = [
     name: "Mr. Favour Jigah",
     role: "Speaker",
     photo: "/images/speakers/favour-jigah.png",
-    bio: "Add Mr. Favour Jigah's bio here — background, area of expertise, and what they bring to BCN.",
+    bio: "Jigah Favour Sokoato is a Computer Engineer, Software Developer, and Creative Professional with a deep passion for technology, digital innovation, and youth empowerment. Bringing extensive hands-on expertise across software engineering, digital media, video production, and creative leadership, he is dedicated to equipping the next generation of creatives to discover, build, and maximize their full potential.",
     socials: {},
   },
   {
