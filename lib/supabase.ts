@@ -1,5 +1,10 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
+// Polyfill WebSocket in Node.js 20 runtime where native WebSocket is disabled
+if (typeof globalThis.WebSocket === "undefined") {
+  globalThis.WebSocket = class DummyWebSocket {} as unknown as typeof WebSocket;
+}
+
 let _publicClient: SupabaseClient | null = null;
 let _adminClient: SupabaseClient | null = null;
 
