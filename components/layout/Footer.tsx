@@ -1,6 +1,40 @@
 import React from "react";
-import { Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Instagram, Facebook } from "lucide-react";
 import { BcnLogo } from "@/components/ui/BcnLogo";
+
+function TikTokIcon({ className = "w-4 h-4" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+    </svg>
+  );
+}
+
+const FOOTER_SOCIALS = [
+  {
+    href: "https://www.instagram.com/building_creatives_network",
+    label: "Instagram",
+    Icon: Instagram,
+  },
+  {
+    href: "https://www.tiktok.com/%40buildingcreatives",
+    label: "TikTok",
+    Icon: TikTokIcon,
+  },
+  {
+    href: "https://www.facebook.com/share/1C47CfKY8U",
+    label: "Facebook",
+    Icon: Facebook,
+  },
+];
 
 export const Footer: React.FC = () => {
   return (
@@ -8,24 +42,24 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
 
-          {/* Logo — increased a bit */}
-          <div className="shrink-0">
-            <BcnLogo type="mark" size="md" variant="transparent" />
+          {/* Logo — matched with header size & crisp resolution */}
+          <div className="shrink-0 py-8 md:py-2 flex items-center justify-center md:justify-start">
+            <BcnLogo
+              type="full"
+              size="md"
+              variant="transparent"
+              className="scale-[4.0] origin-center md:origin-left"
+            />
           </div>
 
-          {/* Copyright content — replaced tagline in the center */}
+          {/* Copyright content */}
           <p className="text-xs sm:text-sm font-normal text-[#8C857B] text-center order-last md:order-none">
             © {new Date().getFullYear()} Building Creatives Network (BCN). All rights reserved.
           </p>
 
-          {/* Social icons */}
+          {/* Social icons: Instagram, TikTok, Facebook */}
           <div className="flex items-center gap-3 shrink-0">
-            {[
-              { href: "https://facebook.com",  label: "Facebook",    Icon: Facebook  },
-              { href: "https://twitter.com",   label: "Twitter / X", Icon: Twitter   },
-              { href: "https://instagram.com", label: "Instagram",   Icon: Instagram },
-              { href: "https://linkedin.com",  label: "LinkedIn",    Icon: Linkedin  },
-            ].map(({ href, label, Icon }) => (
+            {FOOTER_SOCIALS.map(({ href, label, Icon }) => (
               <a
                 key={label}
                 href={href}

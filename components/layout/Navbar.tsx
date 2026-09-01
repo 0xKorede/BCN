@@ -36,7 +36,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between">
           {/* Left: BCN Logo — transparent mark on navbar */}
           <Link href="/" className="focus:outline-none shrink-0 py-0.5">
-            <BcnLogo type="full" size="md" variant="transparent" />
+            <BcnLogo type="full" size="md" variant="transparent" className="scale-[4.0] origin-left -translate-x-20 translate-y-[6.5px]" />
           </Link>
 
           {/* Center: Nav links (Desktop) */}

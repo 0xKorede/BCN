@@ -42,8 +42,8 @@ export const BcnLogo: React.FC<BcnLogoProps> = ({
       <Image
         src={src}
         alt="Building Creatives Network (BCN) Logo"
-        width={minH * 2}
-        height={minH}
+        width={minH * 10}
+        height={minH * 5}
         className={`${maxH} w-auto object-contain transition-transform duration-200 hover:scale-105`}
         priority
         style={{ minHeight: 24 }}

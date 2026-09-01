@@ -22,14 +22,11 @@ export const AboutBcn: React.FC = () => {
 
   const handleTouchEnd = () => {
     if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
-    // Keep active for 2.5 seconds after lifting finger so user can appreciate the effect, then restore static logo
-    touchTimeoutRef.current = setTimeout(() => {
-      setIsHovered(false);
-    }, 2500);
+    setIsHovered(false);
   };
 
   return (
-    <section id="about" className="py-24 bg-bcn-black relative overflow-hidden">
+    <section id="about" className="pt-10 pb-24 sm:py-24 bg-bcn-black relative overflow-hidden">
       {/* Background radial accent */}
       <div className="absolute top-1/2 left-0 w-96 h-96 bg-bcn-orange/5 rounded-full blur-[120px] pointer-events-none -z-10" />
 
@@ -55,17 +52,24 @@ export const AboutBcn: React.FC = () => {
               {/* Background ambient mesh grid */}
               <div className="absolute inset-0 bg-[radial-gradient(#FF8400_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-10" />
 
-              {/* Scaled Presentation Container (keeps both static image & particle canvas 100% synchronized and enlarged) */}
+              {/* Presentation Container — scaled up so both static image & particle canvas appear larger in sync */}
               <div
                 className="absolute inset-0 pointer-events-none"
-                style={{
-                  transform: "translateY(-4%) scale(1.85)",
-                  transformOrigin: "center center",
-                }}
+                style={{ transform: "translateY(-3.5%) scale(1.88)", transformOrigin: "center center" }}
               >
                 {/* Particle Canvas — always mounted so physics stay warm, visible on hover */}
                 <ParticleImage
+                  particleSize={3}
                   repulsionConfig={{ repulsionMode: "outside", repulsionForce: 10, repulsionRadius: 28 }}
+                  hoverConfig={{
+                    hoverType: "roam",
+                    transition: { duration: 0.8, ease: "easeInOut" },
+                    roamWidth: 0,
+                    roamHeight: 0,
+                    roamShape: "rectangle",
+                    roamOpacity: 1,
+                    hideType: "scatter",
+                  }}
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -79,7 +83,7 @@ export const AboutBcn: React.FC = () => {
 
                 {/* Static transparent logo — visible by default, hides on hover, perfectly aligned with particle canvas */}
                 <img
-                  src="https://res.cloudinary.com/dwwyegu5r/image/upload/v1788111844/BCN_Transpaent_logo_iqjzjf.png"
+                  src="/images/logo/bcn-logo-transparent.png"
                   alt="BCN Logo"
                   style={{
                     position: "absolute",

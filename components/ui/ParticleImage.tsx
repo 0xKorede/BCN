@@ -484,7 +484,7 @@ const __originkitPresetProps = {
     backgroundColor: "#000000",
     imageConfig: {
         mode: "fit",
-        image: "https://res.cloudinary.com/dwwyegu5r/image/upload/v1788111844/BCN_Transpaent_logo_iqjzjf.png",
+        image: "/images/logo/bcn-logo-transparent.png",
         scale: 10, widthPx: 400, heightPx: 400, sizeUnit: "%", widthPct: 100, heightPct: 100,
     },
     particleCount: 100,

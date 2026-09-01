@@ -80,20 +80,20 @@ function HostCard({ entry }: { entry: SpeakerEntry }) {
     >
       <div className="flex flex-col md:flex-row">
         {/* Photo — compact portrait on mobile, fixed height on desktop */}
-        <div className="relative w-full md:w-72 lg:w-80 shrink-0 aspect-[4/5] md:aspect-auto md:min-h-[300px] overflow-hidden">
+        <div className="relative w-full md:w-72 lg:w-80 shrink-0 aspect-[4/5] md:aspect-auto md:min-h-[300px] overflow-hidden bg-[#141414]">
           {entry.photo ? (
             <Image
               src={entry.photo}
               alt={entry.name}
               fill
-              className="object-cover"
+              className="object-cover object-top"
               sizes="(max-width: 768px) 100vw, 320px"
             />
           ) : (
             <AvatarPlaceholder name={entry.name} large />
           )}
           {/* Subtle vignette on image */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/60 via-transparent to-transparent md:bg-gradient-to-r" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A]/80 via-transparent to-transparent md:bg-gradient-to-r md:from-transparent md:via-transparent md:to-[#1A1A1A] pointer-events-none" />
         </div>
 
         {/* Text content — constrained to max-w-xl so wide viewports breathe */}
@@ -114,6 +114,9 @@ function HostCard({ entry }: { entry: SpeakerEntry }) {
 
 // ─── Regular speaker card ─────────────────────────────────────────────────────
 function SpeakerCard({ entry, delay = 0 }: { entry: SpeakerEntry; delay?: number }) {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const isLongBio = entry.bio.length > 120;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -123,20 +126,20 @@ function SpeakerCard({ entry, delay = 0 }: { entry: SpeakerEntry; delay?: number
       className="group bg-[#1A1A1A] border border-[#262626] hover:border-bcn-orange/50 rounded-2xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-[0_0_30px_rgba(255,132,0,0.12)] hover:-translate-y-1 flex flex-col"
     >
       {/* Photo — compact portrait ratio keeps card mobile-friendly */}
-      <div className="relative w-full aspect-[4/5] overflow-hidden">
+      <div className="relative w-full aspect-[4/5] overflow-hidden bg-[#141414]">
         {entry.photo ? (
           <Image
             src={entry.photo}
             alt={entry.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
         ) : (
           <AvatarPlaceholder name={entry.name} />
         )}
         {/* Bottom fade into card body */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#1A1A1A] via-transparent to-transparent pointer-events-none" />
       </div>
 
       {/* Text */}
@@ -145,10 +148,23 @@ function SpeakerCard({ entry, delay = 0 }: { entry: SpeakerEntry; delay?: number
         <h3 className="text-base sm:text-lg font-bold text-[#F5F1E8] tracking-tight mt-1">
           {entry.name}
         </h3>
-        <p className="text-xs sm:text-sm text-[#8C857B] leading-relaxed line-clamp-3 flex-1">
+        <p
+          className={`text-xs sm:text-sm text-[#8C857B] leading-relaxed flex-1 ${
+            isExpanded ? "" : "line-clamp-3"
+          }`}
+        >
           {entry.bio}
         </p>
-        <SocialRow socials={entry.socials} />
+
+        {isLongBio && (
+          <button
+            type="button"
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-[11px] font-semibold text-bcn-orange hover:text-bcn-amber transition-colors self-start cursor-pointer focus:outline-none"
+          >
+            {isExpanded ? "Show less" : "Read more"}
+          </button>
+        )}
       </div>
     </motion.div>
   );
