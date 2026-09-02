@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Countdown } from "@/components/ui/Countdown";
@@ -43,24 +42,18 @@ export const Hero: React.FC = () => {
           <span>Lokoja</span>
         </motion.div>
 
-        {/* Hero Title Image */}
-        <motion.div
+        {/* Hero Title — Creators with a Difference */}
+        <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative w-full max-w-2xl mx-auto mb-6 flex justify-center"
+          className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-[#F5F1E8] tracking-tight leading-[1.08] mb-6 max-w-3xl"
         >
-          <div className="relative w-full aspect-[16/7] max-w-xl">
-            <Image
-              src="/images/hero-title.png"
-              alt="Creators with a Difference - BCN Hangout 2026"
-              fill
-              priority
-              className="object-contain"
-              sizes="(max-width: 768px) 90vw, (max-width: 1200px) 60vw, 600px"
-            />
-          </div>
-        </motion.div>
+          Creators with a{" "}
+          <span className="bg-bcn-gradient bg-clip-text text-transparent inline-block drop-shadow-sm">
+            Difference.
+          </span>
+        </motion.h1>
 
         {/* Subtitle / Value Proposition */}
         <motion.p
@@ -69,7 +62,7 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-base sm:text-lg md:text-xl text-[#DFD8CE] max-w-2xl mb-8 font-normal leading-relaxed"
         >
-          Connecting tech innovators, digital artists, founders, and creatives
+          Connecting innovators, digital artists, founders, and creatives
           across Kogi State for a transformative day of community, craft, and vision.
         </motion.p>
 
