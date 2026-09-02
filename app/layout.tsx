@@ -159,7 +159,7 @@ export default function RootLayout({
         "image": [`${SITE_URL}/og-image.jpg`],
         "offers": {
           "@type": "Offer",
-          "url": `${SITE_URL}#register`,
+          "url": `${SITE_URL}/register`,
           "price": "0",
           "priceCurrency": "NGN",
           "availability": "https://schema.org/InStock",

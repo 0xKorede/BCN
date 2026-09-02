@@ -10,7 +10,11 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { EVENT_DATE, EVENT_VENUE } from "@/lib/constants";
 
-export const RegistrationForm: React.FC = () => {
+interface RegistrationFormProps {
+  className?: string;
+}
+
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ className = "" }) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState("");
   const [apiError, setApiError] = useState<string | null>(null);
@@ -57,7 +61,7 @@ export const RegistrationForm: React.FC = () => {
   };
 
   return (
-    <section id="register" className="py-24 bg-bcn-black relative overflow-hidden">
+    <section id="register" className={`py-24 bg-bcn-black relative overflow-hidden ${className}`}>
       {/* Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-bcn-orange/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 

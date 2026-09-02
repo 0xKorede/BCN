@@ -16,6 +16,7 @@ import {
   Check,
   RotateCcw,
   Loader2,
+  Trash2,
 } from "lucide-react";
 
 interface AdminClientProps {
@@ -30,6 +31,8 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
   const [isPending, startTransition] = useTransition();
   const [togglingTicketId, setTogglingTicketId] = useState<string | null>(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Registration | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Stats
   const totalCount = registrations.length;
@@ -84,6 +87,32 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
       alert("Network error while updating check-in status.");
     } finally {
       setTogglingTicketId(null);
+    }
+  };
+
+  // Delete registration permanently
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch("/api/admin/delete-registration", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ticketId: deleteTarget.ticket_id, id: deleteTarget.id }),
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        setRegistrations((prev) => prev.filter((r) => r.ticket_id !== deleteTarget.ticket_id));
+        setDeleteTarget(null);
+      } else {
+        alert(data.message || "Failed to delete registration. Please try again.");
+      }
+    } catch (err) {
+      console.error("[BCN Admin Delete] Client error:", err);
+      alert("Network error while deleting registration.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -347,32 +376,45 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
                           {r.created_at ? new Date(r.created_at).toLocaleDateString("en-NG", { month: "short", day: "numeric" }) : "—"}
                         </td>
 
-                        {/* Manual Action Button */}
+                        {/* Manual Action Buttons */}
                         <td className="py-3.5 px-4 text-right">
-                          <button
-                            type="button"
-                            onClick={() => handleToggleCheckin(r.ticket_id, r.checked_in)}
-                            disabled={isToggling}
-                            className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
-                              r.checked_in
-                                ? "bg-[#252525] hover:bg-[#333333] text-[#A39C90] hover:text-white border border-white/10"
-                                : "bg-bcn-orange hover:bg-bcn-amber text-black shadow-[0_0_15px_rgba(255,132,0,0.3)]"
-                            }`}
-                          >
-                            {isToggling ? (
-                              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            ) : r.checked_in ? (
-                              <>
-                                <RotateCcw className="w-3 h-3" />
-                                Undo
-                              </>
-                            ) : (
-                              <>
-                                <Check className="w-3.5 h-3.5 stroke-[3]" />
-                                Check In
-                              </>
-                            )}
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleCheckin(r.ticket_id, r.checked_in)}
+                              disabled={isToggling}
+                              className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                                r.checked_in
+                                  ? "bg-[#252525] hover:bg-[#333333] text-[#A39C90] hover:text-white border border-white/10"
+                                  : "bg-bcn-orange hover:bg-bcn-amber text-black shadow-[0_0_15px_rgba(255,132,0,0.3)]"
+                              }`}
+                              title={r.checked_in ? "Undo check-in" : "Check attendee in"}
+                            >
+                              {isToggling ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                              ) : r.checked_in ? (
+                                <>
+                                  <RotateCcw className="w-3 h-3" />
+                                  Undo
+                                </>
+                              ) : (
+                                <>
+                                  <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                  Check In
+                                </>
+                              )}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setDeleteTarget(r)}
+                              className="p-1.5 rounded-lg text-[#8C857B] hover:text-[#FF5533] hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition-colors"
+                              title={`Delete ${r.name}`}
+                              aria-label={`Delete ${r.name}`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
@@ -389,6 +431,77 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
         </p>
 
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn">
+          <div className="w-full max-w-md bg-[#161616] border border-red-500/30 rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.8)] space-y-4">
+            <div className="flex items-center gap-3 text-[#FF5533]">
+              <div className="w-10 h-10 rounded-full bg-red-500/15 border border-red-500/30 flex items-center justify-center shrink-0">
+                <Trash2 className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-white">Delete Registration?</h3>
+                <p className="text-xs text-[#8C857B]">Permanent action — cannot be undone</p>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-xl bg-black/40 border border-white/5 space-y-1.5 text-xs">
+              <div className="flex justify-between">
+                <span className="text-[#8C857B]">Name:</span>
+                <span className="font-semibold text-white">{deleteTarget.name}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-[#8C857B]">Email:</span>
+                <span className="text-[#DFD8CE]">{deleteTarget.email}</span>
+              </div>
+              {deleteTarget.whatsapp && (
+                <div className="flex justify-between">
+                  <span className="text-[#8C857B]">WhatsApp:</span>
+                  <span className="text-bcn-amber font-mono">{deleteTarget.whatsapp}</span>
+                </div>
+              )}
+              <div className="flex justify-between">
+                <span className="text-[#8C857B]">Ticket Code:</span>
+                <span className="font-mono font-bold text-bcn-orange">{deleteTarget.ticket_id}</span>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#A39C90] leading-relaxed">
+              This will completely delete this attendee from the Supabase database and door check-in system.
+            </p>
+
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#DFD8CE] hover:text-white bg-[#252525] hover:bg-[#303030] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDelete}
+                disabled={isDeleting}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-red-600 hover:bg-red-500 transition-colors flex items-center gap-1.5 shadow-[0_0_15px_rgba(220,38,38,0.4)]"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  <>
+                    <Trash2 className="w-3.5 h-3.5" />
+                    Yes, Delete Attendee
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

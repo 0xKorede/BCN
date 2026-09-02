@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { BcnLogo } from "@/components/ui/BcnLogo";
 import { Button } from "@/components/ui/Button";
 import { NAV_LINKS } from "@/lib/constants";
@@ -10,6 +11,7 @@ import { Menu, X } from "lucide-react";
 export const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,10 +20,33 @@ export const Navbar: React.FC = () => {
       } else {
         setScrolled(false);
       }
+
+      // If user scrolled back to top on homepage, reset URL to /
+      if (pathname === "/" && window.scrollY < 200 && window.location.pathname === "/register") {
+        window.history.replaceState(null, "", "/");
+      }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [pathname]);
+
+  const handleRegisterClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (pathname === "/") {
+      const registerEl = document.getElementById("register");
+      if (registerEl) {
+        e.preventDefault();
+        registerEl.scrollIntoView({ behavior: "smooth" });
+        window.history.pushState(null, "", "/register");
+      }
+    }
+  };
+
+  const getHref = (href: string) => {
+    if (href.startsWith("#") && pathname !== "/") {
+      return `/${href}`;
+    }
+    return href;
+  };
 
   return (
     <header className="fixed top-4 inset-x-0 z-50 px-4 sm:px-6 flex flex-col items-center pointer-events-none">
@@ -44,7 +69,7 @@ export const Navbar: React.FC = () => {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
+                href={getHref(link.href)}
                 className="text-sm font-medium text-[#DFD8CE] hover:text-bcn-amber transition-colors duration-200"
               >
                 {link.label}
@@ -54,7 +79,7 @@ export const Navbar: React.FC = () => {
 
           {/* Right: Register Button + Mobile Hamburger */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 mr-1 sm:mr-2">
-            <a href="#register">
+            <a href="/register" onClick={handleRegisterClick}>
               <Button variant="primary" size="sm" className="hidden sm:inline-flex">
                 Register
               </Button>
@@ -79,7 +104,7 @@ export const Navbar: React.FC = () => {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}
-                href={link.href}
+                href={getHref(link.href)}
                 onClick={() => setMobileMenuOpen(false)}
                 className="text-base font-medium text-[#F5F1E8] hover:text-bcn-amber py-2 border-b border-white/5 transition-colors"
               >
@@ -88,7 +113,13 @@ export const Navbar: React.FC = () => {
             ))}
           </nav>
           <div className="pt-2">
-            <a href="#register" onClick={() => setMobileMenuOpen(false)}>
+            <a
+              href="/register"
+              onClick={(e) => {
+                setMobileMenuOpen(false);
+                handleRegisterClick(e);
+              }}
+            >
               <Button variant="primary" size="md" fullWidth>
                 Register Now
               </Button>
