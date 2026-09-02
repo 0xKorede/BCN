@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-    const { name, email, role } = validationResult.data;
+    const { name, email, role, whatsapp } = validationResult.data;
 
     // ── 2. Generate ticket ID (8-char uppercase alphanumeric) ─────────────────
     const { customAlphabet } = await import("nanoid");
@@ -26,13 +26,35 @@ export async function POST(request: Request) {
 
     // ── 3. Save to Supabase ───────────────────────────────────────────────────
     const supabase = getSupabaseAdmin();
-    const { error: dbError } = await supabase.from("registrations").insert({
+    const insertPayload: Record<string, any> = {
       name,
       email,
       role,
+      whatsapp,
       ticket_id: ticketId,
       checked_in: false,
-    });
+    };
+
+    let { error: dbError } = await supabase.from("registrations").insert(insertPayload);
+
+    // Fallback: If Supabase table does not have 'whatsapp' column yet, retry insert without it
+    if (
+      dbError &&
+      (dbError.message?.toLowerCase().includes("whatsapp") ||
+        dbError.details?.toLowerCase().includes("whatsapp") ||
+        dbError.code === "PGRST204" ||
+        dbError.code === "42703")
+    ) {
+      console.warn(
+        "[BCN Register] Warning: 'whatsapp' column does not exist in Supabase 'registrations' table yet. Retrying insert without it."
+      );
+      console.warn(
+        "[BCN Register] To store WhatsApp numbers, run this in Supabase SQL editor: ALTER TABLE registrations ADD COLUMN IF NOT EXISTS whatsapp TEXT;"
+      );
+      delete insertPayload.whatsapp;
+      const retry = await supabase.from("registrations").insert(insertPayload);
+      dbError = retry.error;
+    }
 
     if (dbError) {
       // Duplicate email check

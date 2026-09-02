@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion } from "framer-motion";
-import { User, Mail, Briefcase, CheckCircle2, Sparkles, Loader2 } from "lucide-react";
+import { User, Mail, Phone, Briefcase, CheckCircle2, Sparkles, Loader2 } from "lucide-react";
 import { registrationSchema, RegistrationFormValues } from "@/lib/validations";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -25,6 +25,7 @@ export const RegistrationForm: React.FC = () => {
     defaultValues: {
       name: "",
       email: "",
+      whatsapp: "",
       role: "",
     },
   });
@@ -139,6 +140,17 @@ export const RegistrationForm: React.FC = () => {
                 placeholder="you@example.com"
                 error={errors.email?.message}
                 {...register("email")}
+              />
+
+              {/* WhatsApp input */}
+              <Input
+                id="whatsapp"
+                type="tel"
+                label="WhatsApp Number"
+                icon={Phone}
+                placeholder="+234 801 234 5678"
+                error={errors.whatsapp?.message}
+                {...register("whatsapp")}
               />
 
               {/* Role input */}

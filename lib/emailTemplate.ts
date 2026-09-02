@@ -4,6 +4,7 @@ interface EmailTemplateParams {
   name: string;
   role: string;
   ticketId: string;
+  whatsapp?: string;
 }
 
 /**
@@ -14,6 +15,7 @@ export function generateConfirmationEmail({
   name,
   role,
   ticketId,
+  whatsapp,
 }: EmailTemplateParams): string {
   return `<!DOCTYPE html>
 <html lang="en">

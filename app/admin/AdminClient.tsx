@@ -42,6 +42,7 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
     const matchesSearch =
       r.name.toLowerCase().includes(search.toLowerCase()) ||
       r.email.toLowerCase().includes(search.toLowerCase()) ||
+      (r.whatsapp && r.whatsapp.toLowerCase().includes(search.toLowerCase())) ||
       r.role.toLowerCase().includes(search.toLowerCase()) ||
       r.ticket_id.toLowerCase().includes(search.toLowerCase());
 
@@ -107,11 +108,12 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
 
   // CSV Export
   const handleExportCsv = () => {
-    const headers = ["Ticket ID", "Name", "Email", "Role", "Checked In", "Checked In At", "Registered At"];
+    const headers = ["Ticket ID", "Name", "Email", "WhatsApp", "Role", "Checked In", "Checked In At", "Registered At"];
     const rows = registrations.map((r) => [
       r.ticket_id,
       `"${r.name.replace(/"/g, '""')}"`,
       `"${r.email.replace(/"/g, '""')}"`,
+      `"${(r.whatsapp || "").replace(/"/g, '""')}"`,
       `"${r.role.replace(/"/g, '""')}"`,
       r.checked_in ? "Yes" : "No",
       r.checked_in_at || "",
@@ -291,10 +293,15 @@ export function AdminClient({ initialRegistrations }: AdminClientProps) {
                           r.checked_in ? "bg-green-950/10" : ""
                         }`}
                       >
-                        {/* Attendee Name & Email */}
+                        {/* Attendee Name & Email & WhatsApp */}
                         <td className="py-3.5 px-4">
                           <div className="font-semibold text-white">{r.name}</div>
                           <div className="text-[11px] text-[#8C857B] truncate max-w-[200px]">{r.email}</div>
+                          {r.whatsapp && (
+                            <div className="text-[11px] text-[#A39C90] truncate max-w-[200px] flex items-center gap-1 mt-0.5 font-mono">
+                              <span className="text-bcn-orange">WA:</span> {r.whatsapp}
+                            </div>
+                          )}
                         </td>
 
                         {/* Role */}

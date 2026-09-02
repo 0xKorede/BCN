@@ -66,6 +66,7 @@ export interface Registration {
   id: string;
   name: string;
   email: string;
+  whatsapp?: string | null;
   role: string;
   ticket_id: string;
   checked_in: boolean;
