@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { registrationSchema } from "@/lib/validations";
 import { getSupabaseAdmin } from "@/lib/supabase";
-import { generateConfirmationEmail } from "@/lib/emailTemplate";
+// import { generateConfirmationEmail } from "@/lib/emailTemplate";
 
 export const runtime = "nodejs";
 
@@ -49,6 +49,11 @@ export async function POST(request: Request) {
       );
     }
 
+    // ── 4. Return success ─────────────────────────────────────────────────────
+    console.log(`[BCN Register] New attendee: ${name} (${email}) — Ticket: ${ticketId}`);
+
+    // EMAIL DISABLED — re-enable once domain + Resend are fully configured. See STEP 4/5 in the registration build prompt.
+    /*
     // ── 4. Generate QR PNG ────────────────────────────────────────────────────
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://buildingcreativesnetwork.com";
     const checkinUrl = `${siteUrl}/checkin/${ticketId}`;
@@ -94,10 +99,9 @@ export async function POST(request: Request) {
       // Log but do NOT fail — registration is valid even if email fails
       console.error("[BCN Register] Email delivery error:", emailError);
     }
+    */
 
-    // ── 6. Return success ─────────────────────────────────────────────────────
-    console.log(`[BCN Register] New attendee: ${name} (${email}) — Ticket: ${ticketId}`);
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true, ticketId }, { status: 200 });
   } catch (error) {
     console.error("[BCN Register] Unexpected error:", error);
     return NextResponse.json(

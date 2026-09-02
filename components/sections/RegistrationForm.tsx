@@ -96,7 +96,7 @@ export const RegistrationForm: React.FC = () => {
                   See you {EVENT_DATE} at {EVENT_VENUE}.
                 </p>
                 <p className="text-sm text-[#DFD8CE] pt-2 max-w-sm mx-auto">
-                  Check your email for your ticket and QR code.
+                  We&apos;ve saved your spot — ticket details will follow by email soon.
                 </p>
               </div>
 
