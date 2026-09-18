@@ -73,3 +73,24 @@ export interface Registration {
   checked_in_at: string | null;
   created_at: string;
 }
+
+/** Type for a volunteers row */
+export interface Volunteer {
+  id: string;
+  name: string;
+  email: string;
+  whatsapp?: string | null;
+  role: string;
+  motivation?: string | null;
+  ticket_id: string;
+  created_at: string;
+}
+
+/** Type for a media row (event-media bucket + media table) */
+export interface MediaItem {
+  id: string;
+  url: string;
+  type: "image" | "video";
+  caption?: string | null;
+  uploaded_at: string;
+}

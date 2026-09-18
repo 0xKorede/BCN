@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { getSupabaseAdmin, Registration } from "@/lib/supabase";
+import { getSupabaseAdmin, Registration, MediaItem, Volunteer } from "@/lib/supabase";
 import { AdminClient } from "./AdminClient";
 import { AdminLoginForm } from "./AdminLoginForm";
 
@@ -8,6 +8,8 @@ export const revalidate = 0;
 
 const SESSION_COOKIE = "bcn_admin_session";
 const SESSION_VALUE = "authenticated";
+
+type MediaRow = MediaItem & { storage_key?: string };
 
 export default async function AdminPage() {
   const session = cookies().get(SESSION_COOKIE);
@@ -18,22 +20,53 @@ export default async function AdminPage() {
   }
 
   let registrations: Registration[] = [];
+  let initialMedia: MediaRow[] = [];
+  let volunteers: Volunteer[] = [];
 
   try {
     const supabase = getSupabaseAdmin();
-    const { data, error } = await supabase
-      .from("registrations")
-      .select("*")
-      .order("created_at", { ascending: false });
 
-    if (error) {
-      console.error("[BCN Admin] Error fetching registrations:", error);
-    } else if (data) {
-      registrations = data as Registration[];
+    const [regResult, mediaResult, volResult] = await Promise.all([
+      supabase
+        .from("registrations")
+        .select("*")
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("media")
+        .select("*")
+        .order("uploaded_at", { ascending: false }),
+      supabase
+        .from("volunteers")
+        .select("*")
+        .order("created_at", { ascending: false }),
+    ]);
+
+    if (regResult.error) {
+      console.error("[BCN Admin] Error fetching registrations:", regResult.error);
+    } else if (regResult.data) {
+      registrations = regResult.data as Registration[];
+    }
+
+    if (mediaResult.error) {
+      console.error("[BCN Admin] Error fetching media:", mediaResult.error);
+    } else if (mediaResult.data) {
+      initialMedia = mediaResult.data as MediaRow[];
+    }
+
+    if (volResult.error) {
+      console.error("[BCN Admin] Error fetching volunteers:", volResult.error);
+    } else if (volResult.data) {
+      volunteers = volResult.data as Volunteer[];
     }
   } catch (err) {
     console.error("[BCN Admin] Supabase connection error:", err);
   }
 
-  return <AdminClient initialRegistrations={registrations} />;
+  return (
+    <AdminClient
+      initialRegistrations={registrations}
+      initialMedia={initialMedia}
+      initialVolunteers={volunteers}
+    />
+  );
 }
