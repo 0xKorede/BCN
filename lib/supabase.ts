@@ -94,3 +94,11 @@ export interface MediaItem {
   caption?: string | null;
   uploaded_at: string;
 }
+
+/** Type for event_status single row */
+export interface EventStatus {
+  id: number;
+  current_item_id: number | null;
+  updated_at: string;
+}
+

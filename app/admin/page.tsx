@@ -22,11 +22,12 @@ export default async function AdminPage() {
   let registrations: Registration[] = [];
   let initialMedia: MediaRow[] = [];
   let volunteers: Volunteer[] = [];
+  let initialCurrentItemId: number | null = null;
 
   try {
     const supabase = getSupabaseAdmin();
 
-    const [regResult, mediaResult, volResult] = await Promise.all([
+    const [regResult, mediaResult, volResult, statusResult] = await Promise.all([
       supabase
         .from("registrations")
         .select("*")
@@ -39,6 +40,11 @@ export default async function AdminPage() {
         .from("volunteers")
         .select("*")
         .order("created_at", { ascending: false }),
+      supabase
+        .from("event_status")
+        .select("current_item_id")
+        .eq("id", 1)
+        .maybeSingle(),
     ]);
 
     if (regResult.error) {
@@ -58,6 +64,10 @@ export default async function AdminPage() {
     } else if (volResult.data) {
       volunteers = volResult.data as Volunteer[];
     }
+
+    if (statusResult.data) {
+      initialCurrentItemId = statusResult.data.current_item_id ?? null;
+    }
   } catch (err) {
     console.error("[BCN Admin] Supabase connection error:", err);
   }
@@ -67,6 +77,7 @@ export default async function AdminPage() {
       initialRegistrations={registrations}
       initialMedia={initialMedia}
       initialVolunteers={volunteers}
+      initialCurrentItemId={initialCurrentItemId}
     />
   );
 }

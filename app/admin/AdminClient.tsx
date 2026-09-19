@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Registration, Volunteer, MediaItem } from "@/lib/supabase";
 import { GalleryUpload } from "@/components/admin/GalleryUpload";
+import { ProgrammeControl } from "@/components/admin/ProgrammeControl";
 import {
   Search,
   CheckCircle2,
@@ -20,17 +21,24 @@ import {
   Trash2,
   Images,
   Heart,
+  Radio,
 } from "lucide-react";
 
 interface AdminClientProps {
   initialRegistrations: Registration[];
   initialMedia: (MediaItem & { storage_key?: string })[];
   initialVolunteers: Volunteer[];
+  initialCurrentItemId?: number | null;
 }
 
-export function AdminClient({ initialRegistrations, initialMedia, initialVolunteers }: AdminClientProps) {
+export function AdminClient({
+  initialRegistrations,
+  initialMedia,
+  initialVolunteers,
+  initialCurrentItemId = null,
+}: AdminClientProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"registrations" | "volunteers" | "gallery">("registrations");
+  const [activeTab, setActiveTab] = useState<"registrations" | "volunteers" | "gallery" | "programme">("registrations");
 
   // ── Registrations state ──────────────────────────────────────────────────
   const [registrations, setRegistrations] = useState<Registration[]>(initialRegistrations);
@@ -326,6 +334,17 @@ export function AdminClient({ initialRegistrations, initialMedia, initialVolunte
           >
             <Images className="w-3.5 h-3.5" />
             Live Gallery
+          </button>
+          <button
+            onClick={() => setActiveTab("programme")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+              activeTab === "programme"
+                ? "bg-bcn-orange text-black"
+                : "text-[#8C857B] hover:text-white"
+            }`}
+          >
+            <Radio className="w-3.5 h-3.5" />
+            Programme Control
           </button>
         </div>
 
@@ -682,9 +701,27 @@ export function AdminClient({ initialRegistrations, initialMedia, initialVolunte
           </div>
         )}
 
+        {/* ── PROGRAMME CONTROL TAB ── */}
+        {activeTab === "programme" && (
+          <div className="bg-[#161616] border border-white/10 rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center gap-2.5 mb-6">
+              <div className="w-8 h-8 rounded-xl bg-bcn-orange/15 border border-bcn-orange/30 flex items-center justify-center">
+                <Radio className="w-4 h-4 text-bcn-orange" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-white">Programme Control</h2>
+                <p className="text-xs text-[#5C564E]">
+                  Tap any item to set it as Live Now on the public schedule. Real-time sync across all visitors.
+                </p>
+              </div>
+            </div>
+            <ProgrammeControl initialCurrentItemId={initialCurrentItemId} />
+          </div>
+        )}
+
         {/* Footer info */}
         <p className="text-center text-xs text-[#5C564E] pt-2">
-          BCN Staff Portal • Real-time check-in, volunteer management &amp; live gallery for BCN Hangout 2026
+          BCN Staff Portal • Real-time check-in, volunteer management, programme control &amp; live gallery for BCN Hangout 2026
         </p>
 
       </div>

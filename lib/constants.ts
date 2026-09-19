@@ -97,9 +97,162 @@ export const SCHEDULE: ScheduleItem[] = [
   },
 ];
 
+export interface ProgrammeItem {
+  id: number;
+  number: string;
+  title: string;
+  presenter?: string;
+  durationMinutes: number;
+  durationLabel: string;
+}
+
+export const PROGRAMME: ProgrammeItem[] = [
+  {
+    id: 1,
+    number: "01",
+    title: "Opening Prayer",
+    presenter: "Pastor Yusuf Yusuf",
+    durationMinutes: 3,
+    durationLabel: "3 mins",
+  },
+  {
+    id: 2,
+    number: "02",
+    title: "Welcome Speech",
+    presenter: "Mr. Entrust",
+    durationMinutes: 5,
+    durationLabel: "5 mins",
+  },
+  {
+    id: 3,
+    number: "03",
+    title: "Solo Performance, “Nigeria We Held Thee”",
+    presenter: "MC Rexxie",
+    durationMinutes: 5,
+    durationLabel: "5 mins",
+  },
+  {
+    id: 4,
+    number: "04",
+    title: "Leadership 101 & Stewardship",
+    presenter: "Mr. Sam",
+    durationMinutes: 30,
+    durationLabel: "30 mins",
+  },
+  {
+    id: 5,
+    number: "05",
+    title: "Spoken Words",
+    presenter: "Timidapoet",
+    durationMinutes: 7,
+    durationLabel: "7 mins",
+  },
+  {
+    id: 6,
+    number: "06",
+    title: "How Far Can You See",
+    presenter: "Mr. Entrust",
+    durationMinutes: 7,
+    durationLabel: "7 mins",
+  },
+  {
+    id: 7,
+    number: "07",
+    title: "First Meet & Greet",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 8,
+    number: "08",
+    title: "Art of Storytelling",
+    presenter: "Mr. Favour",
+    durationMinutes: 30,
+    durationLabel: "30 mins",
+  },
+  {
+    id: 9,
+    number: "09",
+    title: "Live Art Session",
+    presenter: "Naomi",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 10,
+    number: "10",
+    title: "The Holy Spirit: The True Origin of Creativity",
+    presenter: "Pastor Yusuf",
+    durationMinutes: 30,
+    durationLabel: "30 mins",
+  },
+  {
+    id: 11,
+    number: "11",
+    title: "First Q&A",
+    presenter: "MC Rexxie (Moderator)",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 12,
+    number: "12",
+    title: "Announcements",
+    presenter: "Mr. Sam",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 13,
+    number: "13",
+    title: "Stand-up Performance",
+    presenter: "Simon Loco",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 14,
+    number: "14",
+    title: "Fireplace Conversation (Second Q/A)",
+    presenter: "Tspice & Mr. Sam",
+    durationMinutes: 60,
+    durationLabel: "1 hour",
+  },
+  {
+    id: 15,
+    number: "15",
+    title: "Second Meet & Greet",
+    durationMinutes: 10,
+    durationLabel: "10 mins",
+  },
+  {
+    id: 16,
+    number: "16",
+    title: "Prayer",
+    durationMinutes: 20,
+    durationLabel: "20 mins",
+  },
+  {
+    id: 17,
+    number: "17",
+    title: "Closing Remarks",
+    presenter: "Mr. Sam",
+    durationMinutes: 5,
+    durationLabel: "5 mins",
+  },
+  {
+    id: 18,
+    number: "18",
+    title: "Closing Prayer",
+    durationMinutes: 5,
+    durationLabel: "5 mins",
+  },
+];
+
 export const NAV_LINKS = [
   { label: "About", href: "#about" },
   { label: "Schedule", href: "#schedule" },
   { label: "Speakers", href: "#speakers" },
   { label: "Location", href: "#location" },
 ];
+
