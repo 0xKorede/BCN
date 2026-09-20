@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { getSupabaseAdmin, Registration, MediaItem, Volunteer } from "@/lib/supabase";
+import { getSupabaseAdmin, Registration, MediaItem, Volunteer, TeamMember } from "@/lib/supabase";
 import { AdminClient } from "./AdminClient";
 import { AdminLoginForm } from "./AdminLoginForm";
 
@@ -23,11 +23,12 @@ export default async function AdminPage() {
   let initialMedia: MediaRow[] = [];
   let volunteers: Volunteer[] = [];
   let initialCurrentItemId: number | null = null;
+  let initialTeamMembers: TeamMember[] = [];
 
   try {
     const supabase = getSupabaseAdmin();
 
-    const [regResult, mediaResult, volResult, statusResult] = await Promise.all([
+    const [regResult, mediaResult, volResult, statusResult, teamResult] = await Promise.all([
       supabase
         .from("registrations")
         .select("*")
@@ -45,6 +46,11 @@ export default async function AdminPage() {
         .select("current_item_id")
         .eq("id", 1)
         .maybeSingle(),
+      supabase
+        .from("team_members")
+        .select("*")
+        .order("display_order", { ascending: true })
+        .order("created_at", { ascending: true }),
     ]);
 
     if (regResult.error) {
@@ -68,6 +74,12 @@ export default async function AdminPage() {
     if (statusResult.data) {
       initialCurrentItemId = statusResult.data.current_item_id ?? null;
     }
+
+    if (teamResult.error) {
+      console.error("[BCN Admin] Error fetching team members:", teamResult.error);
+    } else if (teamResult.data) {
+      initialTeamMembers = teamResult.data as TeamMember[];
+    }
   } catch (err) {
     console.error("[BCN Admin] Supabase connection error:", err);
   }
@@ -78,6 +90,7 @@ export default async function AdminPage() {
       initialMedia={initialMedia}
       initialVolunteers={volunteers}
       initialCurrentItemId={initialCurrentItemId}
+      initialTeamMembers={initialTeamMembers}
     />
   );
 }

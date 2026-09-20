@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { PROGRAMME, ProgrammeItem } from "@/lib/constants";
+import { PROGRAMME, ProgrammeItem, EVENT_HAS_ENDED } from "@/lib/constants";
 import { getSupabasePublic } from "@/lib/supabase";
 import { Radio, Clock, User, CheckCircle2 } from "lucide-react";
 
@@ -62,6 +62,12 @@ export const EventSchedule: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Heading */}
         <div className="text-center mb-12 sm:mb-16 space-y-3">
+          {EVENT_HAS_ENDED && (
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-semibold text-[#DFD8CE] mb-2">
+              <span className="w-2 h-2 rounded-full bg-[#8C857B]" />
+              <span>This event has concluded</span>
+            </div>
+          )}
           <span className="text-xs sm:text-sm font-bold tracking-widest text-bcn-orange uppercase block">
             EVENT SCHEDULE
           </span>
@@ -75,8 +81,8 @@ export const EventSchedule: React.FC = () => {
             18 impactful segments crafted to foster relationship, professional elevation, and spiritual alignment.
           </p>
 
-          {/* Realtime Live Broadcast Banner */}
-          {liveItem && (
+          {/* Realtime Live Broadcast Banner — hidden when event has ended */}
+          {!EVENT_HAS_ENDED && liveItem && (
             <div className="pt-2">
               <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-[#241306] border border-bcn-orange/60 shadow-[0_0_20px_rgba(255,132,0,0.25)] animate-pulse">
                 <span className="w-2 h-2 rounded-full bg-bcn-orange" />
@@ -98,8 +104,8 @@ export const EventSchedule: React.FC = () => {
 
           <div className="space-y-3 relative z-10">
             {PROGRAMME.map((item, index) => {
-              const isLive = currentLiveId === item.id;
-              const isCompleted = currentLiveId !== null && item.id < currentLiveId;
+              const isLive = EVENT_HAS_ENDED ? false : currentLiveId === item.id;
+              const isCompleted = EVENT_HAS_ENDED ? true : (currentLiveId !== null && item.id < currentLiveId);
 
               return (
                 <motion.div

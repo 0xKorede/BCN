@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { EVENT_TARGET_DATE } from "@/lib/constants";
+import { EVENT_TARGET_DATE, EVENT_HAS_ENDED } from "@/lib/constants";
+import { CheckCircle2 } from "lucide-react";
 
 interface TimeLeft {
   days: number;
@@ -39,6 +40,8 @@ export const Countdown: React.FC = () => {
 
   useEffect(() => {
     setMounted(true);
+    if (EVENT_HAS_ENDED) return;
+
     setTimeLeft(getTimeLeft());
     const id = setInterval(() => {
       setTimeLeft(getTimeLeft());
@@ -50,6 +53,35 @@ export const Countdown: React.FC = () => {
   if (!mounted) {
     return (
       <div className="h-[72px] w-full max-w-xs sm:max-w-sm mx-auto" />
+    );
+  }
+
+  // Event has concluded — static post-event card state
+  if (EVENT_HAS_ENDED) {
+    return (
+      <div
+        className={[
+          "inline-flex items-center justify-center gap-3",
+          "px-8 py-4 rounded-2xl",
+          "bg-black/60 backdrop-blur-xl backdrop-saturate-150",
+          "border border-white/10",
+          "shadow-[0_0_40px_rgba(255,132,0,0.12)]",
+        ].join(" ")}
+      >
+        <CheckCircle2 className="w-5 h-5 text-bcn-orange shrink-0" />
+        <span
+          className="text-sm sm:text-base font-bold tracking-wide"
+          style={{
+            backgroundImage:
+              "linear-gradient(135deg, #FF8400 0%, #FFA341 35%, #FFBD60 65%, #FFD192 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Event Concluded — Thank You!
+        </span>
+      </div>
     );
   }
 

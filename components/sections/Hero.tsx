@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { Countdown } from "@/components/ui/Countdown";
 import { Calendar, MapPin } from "lucide-react";
-import { EVENT_DATE, EVENT_VENUE } from "@/lib/constants";
+import { EVENT_DATE, EVENT_VENUE, EVENT_HAS_ENDED } from "@/lib/constants";
 
 export const Hero: React.FC = () => {
   const handleRegisterClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -14,6 +14,14 @@ export const Hero: React.FC = () => {
       e.preventDefault();
       registerEl.scrollIntoView({ behavior: "smooth" });
       window.history.pushState(null, "", "/register");
+    }
+  };
+
+  const handleHighlightsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    const momentsEl = document.getElementById("live-moments");
+    if (momentsEl) {
+      e.preventDefault();
+      momentsEl.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -42,17 +50,28 @@ export const Hero: React.FC = () => {
           <span>Lokoja</span>
         </motion.div>
 
-        {/* Hero Title — Creators with a Difference */}
+        {/* Hero Title */}
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="text-4xl sm:text-6xl md:text-7xl font-extrabold text-[#F5F1E8] tracking-tight leading-[1.08] mb-6 max-w-3xl"
         >
-          Creators with a{" "}
-          <span className="bg-bcn-gradient bg-clip-text text-transparent inline-block drop-shadow-sm">
-            Difference.
-          </span>
+          {EVENT_HAS_ENDED ? (
+            <>
+              Thank You for an{" "}
+              <span className="bg-bcn-gradient bg-clip-text text-transparent inline-block drop-shadow-sm">
+                Amazing Day!
+              </span>
+            </>
+          ) : (
+            <>
+              Creators with a{" "}
+              <span className="bg-bcn-gradient bg-clip-text text-transparent inline-block drop-shadow-sm">
+                Difference.
+              </span>
+            </>
+          )}
         </motion.h1>
 
         {/* Subtitle / Value Proposition */}
@@ -62,8 +81,9 @@ export const Hero: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-base sm:text-lg md:text-xl text-[#DFD8CE] max-w-2xl mb-8 font-normal leading-relaxed"
         >
-          Connecting innovators, digital artists, founders, and creatives
-          across Kogi State for a transformative day of community, craft, and vision.
+          {EVENT_HAS_ENDED
+            ? "BCN Hangout 2026 has come and gone — thank you to everyone who showed up, spoke, performed, and built with us."
+            : "Connecting innovators, digital artists, founders, and creatives across Kogi State for a transformative day of community, craft, and vision."}
         </motion.p>
 
         {/* Event Quick Info Pills */}
@@ -93,23 +113,45 @@ export const Hero: React.FC = () => {
           <Countdown />
         </motion.div>
 
-        {/* Dual CTAs */}
+        {/* Action CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.4 }}
           className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
         >
-          <a href="/register" onClick={handleRegisterClick} className="w-full sm:w-auto">
-            <Button variant="primary" size="lg" className="w-full sm:w-auto px-10">
-              Secure Your Spot
-            </Button>
-          </a>
-          <a href="#schedule" className="w-full sm:w-auto">
-            <Button variant="secondary" size="lg" className="w-full sm:w-auto px-8">
-              View Schedule
-            </Button>
-          </a>
+          {EVENT_HAS_ENDED ? (
+            <>
+              <a href="#live-moments" onClick={handleHighlightsClick} className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto px-10">
+                  See Event Highlights
+                </Button>
+              </a>
+              <a
+                href="https://www.instagram.com/building_creatives_network"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full sm:w-auto"
+              >
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto px-8">
+                  Follow us for our next event
+                </Button>
+              </a>
+            </>
+          ) : (
+            <>
+              <a href="/register" onClick={handleRegisterClick} className="w-full sm:w-auto">
+                <Button variant="primary" size="lg" className="w-full sm:w-auto px-10">
+                  Secure Your Spot
+                </Button>
+              </a>
+              <a href="#schedule" className="w-full sm:w-auto">
+                <Button variant="secondary" size="lg" className="w-full sm:w-auto px-8">
+                  View Schedule
+                </Button>
+              </a>
+            </>
+          )}
         </motion.div>
       </div>
     </section>

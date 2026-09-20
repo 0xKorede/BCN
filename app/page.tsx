@@ -7,6 +7,7 @@ import { EventDetailsBar } from "@/components/sections/EventDetailsBar";
 import { LiveMoments } from "@/components/sections/LiveMoments";
 import { RegistrationForm } from "@/components/sections/RegistrationForm";
 import { VolunteerCTA } from "@/components/sections/VolunteerCTA";
+import { TeamSection } from "@/components/sections/TeamSection";
 import { Footer } from "@/components/layout/Footer";
 import { getSupabaseAdmin, MediaItem } from "@/lib/supabase";
 
@@ -58,6 +59,9 @@ export default async function Home() {
 
         {/* 7. Registration Form Section */}
         <RegistrationForm />
+
+        {/* 8. Meet the Team Section */}
+        <TeamSection />
       </main>
 
       {/* Footer */}

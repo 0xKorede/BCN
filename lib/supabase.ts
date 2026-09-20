@@ -102,3 +102,13 @@ export interface EventStatus {
   updated_at: string;
 }
 
+/** Type for team_members row (team-photos bucket + team_members table) */
+export interface TeamMember {
+  id: string;
+  name: string;
+  bio: string;
+  photo_url: string | null;
+  display_order: number;
+  created_at: string;
+}
+

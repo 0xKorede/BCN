@@ -3,6 +3,8 @@ export const EVENT_TIME = "10:00 AM";
 export const EVENT_VENUE = "KHMS HALL, LFC LOKONGOMA LOKOJA";
 /** ISO-8601 target for the live countdown — Sept 19, 2026, 10:00 AM WAT (UTC+1) */
 export const EVENT_TARGET_DATE = new Date("2026-09-19T10:00:00+01:00");
+/** Single switch for post-event mode across all public sections */
+export const EVENT_HAS_ENDED = true;
 
 export interface SpeakerSocials {
   instagram?: string;

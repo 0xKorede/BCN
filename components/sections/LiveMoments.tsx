@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { getSupabasePublic, MediaItem } from "@/lib/supabase";
+import { EVENT_HAS_ENDED } from "@/lib/constants";
 import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
@@ -262,15 +263,19 @@ export function LiveMoments({ initialMedia = [] }: LiveMomentsProps) {
         <div className="mb-10 sm:mb-14">
           <div className="flex items-center gap-3 mb-3">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
-              Live Moments
+              {EVENT_HAS_ENDED ? "Event Highlights" : "Live Moments"}
             </h2>
-            <span
-              className="w-3 h-3 rounded-full bg-bcn-orange animate-livePulse flex-shrink-0 mt-1"
-              aria-hidden="true"
-            />
+            {!EVENT_HAS_ENDED && (
+              <span
+                className="w-3 h-3 rounded-full bg-bcn-orange animate-livePulse flex-shrink-0 mt-1"
+                aria-hidden="true"
+              />
+            )}
           </div>
           <p className="text-[#8C857B] text-sm sm:text-base max-w-md">
-            Photos and videos from the day, updated live
+            {EVENT_HAS_ENDED
+              ? "Photos and videos from BCN Hangout 2026"
+              : "Photos and videos from the day, updated live"}
           </p>
         </div>
 

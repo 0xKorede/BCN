@@ -2,9 +2,10 @@
 
 import React, { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Registration, Volunteer, MediaItem } from "@/lib/supabase";
+import { Registration, Volunteer, MediaItem, TeamMember } from "@/lib/supabase";
 import { GalleryUpload } from "@/components/admin/GalleryUpload";
 import { ProgrammeControl } from "@/components/admin/ProgrammeControl";
+import { TeamManagement } from "@/components/admin/TeamManagement";
 import {
   Search,
   CheckCircle2,
@@ -22,6 +23,7 @@ import {
   Images,
   Heart,
   Radio,
+  Users2,
 } from "lucide-react";
 
 interface AdminClientProps {
@@ -29,6 +31,7 @@ interface AdminClientProps {
   initialMedia: (MediaItem & { storage_key?: string })[];
   initialVolunteers: Volunteer[];
   initialCurrentItemId?: number | null;
+  initialTeamMembers?: TeamMember[];
 }
 
 export function AdminClient({
@@ -36,9 +39,10 @@ export function AdminClient({
   initialMedia,
   initialVolunteers,
   initialCurrentItemId = null,
+  initialTeamMembers = [],
 }: AdminClientProps) {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<"registrations" | "volunteers" | "gallery" | "programme">("registrations");
+  const [activeTab, setActiveTab] = useState<"registrations" | "volunteers" | "gallery" | "programme" | "team">("registrations");
 
   // ── Registrations state ──────────────────────────────────────────────────
   const [registrations, setRegistrations] = useState<Registration[]>(initialRegistrations);
@@ -345,6 +349,17 @@ export function AdminClient({
           >
             <Radio className="w-3.5 h-3.5" />
             Programme Control
+          </button>
+          <button
+            onClick={() => setActiveTab("team")}
+            className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-colors ${
+              activeTab === "team"
+                ? "bg-bcn-orange text-black"
+                : "text-[#8C857B] hover:text-white"
+            }`}
+          >
+            <Users2 className="w-3.5 h-3.5" />
+            Team Members
           </button>
         </div>
 
@@ -719,9 +734,27 @@ export function AdminClient({
           </div>
         )}
 
+        {/* ── TEAM MEMBERS TAB ── */}
+        {activeTab === "team" && (
+          <div className="bg-[#161616] border border-white/10 rounded-2xl p-4 sm:p-6">
+            <div className="flex items-center gap-2.5 mb-6">
+              <div className="w-8 h-8 rounded-xl bg-bcn-orange/15 border border-bcn-orange/30 flex items-center justify-center">
+                <Users2 className="w-4 h-4 text-bcn-orange" />
+              </div>
+              <div>
+                <h2 className="text-sm font-bold text-white">Meet the Team Management</h2>
+                <p className="text-xs text-[#5C564E]">
+                  Add, edit, reorder, or delete team members shown on the public homepage
+                </p>
+              </div>
+            </div>
+            <TeamManagement initialTeamMembers={initialTeamMembers} />
+          </div>
+        )}
+
         {/* Footer info */}
         <p className="text-center text-xs text-[#5C564E] pt-2">
-          BCN Staff Portal • Real-time check-in, volunteer management, programme control &amp; live gallery for BCN Hangout 2026
+          BCN Staff Portal • Real-time check-in, volunteer management, programme control, live gallery &amp; team management for BCN Hangout 2026
         </p>
 
       </div>
