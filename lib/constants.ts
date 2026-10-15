@@ -5,6 +5,8 @@ export const EVENT_VENUE = "KHMS HALL, LFC LOKONGOMA LOKOJA";
 export const EVENT_TARGET_DATE = new Date("2026-09-19T10:00:00+01:00");
 /** Single switch for post-event mode across all public sections */
 export const EVENT_HAS_ENDED = true;
+export const GALLERY_DRIVE_LINK: string =
+  "https://drive.google.com/drive/folders/1kfmrVTR1yR2w-6vtQjQ00XDRyPZilT9-";
 
 export interface SpeakerSocials {
   instagram?: string;

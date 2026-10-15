@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { getSupabasePublic, MediaItem } from "@/lib/supabase";
-import { EVENT_HAS_ENDED } from "@/lib/constants";
+import { EVENT_HAS_ENDED, GALLERY_DRIVE_LINK } from "@/lib/constants";
 import { X, ChevronLeft, ChevronRight, Play } from "lucide-react";
 
 // ─── Lightbox ────────────────────────────────────────────────────────────────
@@ -140,17 +140,18 @@ function EmptyState() {
 interface GridItemProps {
   item: MediaItem;
   onClick: () => void;
+  className?: string;
 }
 
-function GridItem({ item, onClick }: GridItemProps) {
+function GridItem({ item, onClick, className = "" }: GridItemProps) {
   const isVideo = item.type === "video";
 
   return (
     <div
       onClick={onClick}
-      className="group relative rounded-2xl overflow-hidden border border-white/10 cursor-pointer
+      className={`group relative rounded-2xl overflow-hidden border border-white/10 cursor-pointer
                  transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:border-bcn-orange/40
-                 hover:shadow-[0_8px_32px_rgba(255,132,0,0.15)] bg-[#161616] break-inside-avoid mb-3 sm:mb-4"
+                 hover:shadow-[0_8px_32px_rgba(255,132,0,0.15)] bg-[#161616] min-h-0 ${className}`}
     >
       {isVideo ? (
         <>
@@ -159,7 +160,7 @@ function GridItem({ item, onClick }: GridItemProps) {
             preload="metadata"
             muted
             playsInline
-            className="w-full h-auto block"
+            className="w-full h-full object-cover block"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
             <div className="w-12 h-12 rounded-full bg-black/60 border border-white/30 flex items-center justify-center backdrop-blur-sm
@@ -173,7 +174,7 @@ function GridItem({ item, onClick }: GridItemProps) {
         <img
           src={item.url}
           alt={item.caption ?? "Live moment"}
-          className="w-full h-auto block"
+          className="w-full h-full object-cover block"
           loading="lazy"
         />
       )}
@@ -252,6 +253,29 @@ export function LiveMoments({ initialMedia = [] }: LiveMomentsProps) {
   const openLightbox = (index: number) => setLightboxIndex(index);
   const closeLightbox = () => setLightboxIndex(null);
   const navigateLightbox = (index: number) => setLightboxIndex(index);
+  const previewMedia = media.slice(0, 8);
+
+  const getMosaicClass = (index: number) => {
+    const desktopPositions = [
+      "lg:col-start-1 lg:col-span-2 lg:row-start-1",
+      "lg:col-start-3 lg:row-start-1",
+      "lg:col-start-4 lg:row-start-1 lg:row-span-2",
+      "lg:col-start-1 lg:row-start-2 lg:row-span-2",
+      "lg:col-start-2 lg:col-span-2 lg:row-start-2",
+      "lg:col-start-2 lg:row-start-3",
+      previewMedia.length === 7
+        ? "lg:col-start-3 lg:col-span-2 lg:row-start-3"
+        : "lg:col-start-3 lg:row-start-3",
+      "lg:col-start-4 lg:row-start-3",
+    ];
+
+    const completesMobileRow =
+      previewMedia.length % 2 === 1 && index === previewMedia.length - 1
+        ? "col-span-2 sm:col-span-1"
+        : "";
+
+    return `${desktopPositions[index]} ${completesMobileRow}`;
+  };
 
   return (
     <section id="live-moments" className="py-16 sm:py-24 bg-[#0A0A0A] relative overflow-hidden">
@@ -293,21 +317,35 @@ export function LiveMoments({ initialMedia = [] }: LiveMomentsProps) {
         ) : media.length === 0 ? (
           <EmptyState />
         ) : (
-          <div className="columns-2 sm:columns-3 lg:columns-4 gap-3 sm:gap-4">
-            {media.map((item, i) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 lg:grid-rows-3 gap-3 sm:gap-4 auto-rows-[180px] sm:auto-rows-[220px] lg:auto-rows-[210px]">
+            {previewMedia.map((item, i) => (
               <GridItem
                 key={item.id}
                 item={item}
                 onClick={() => openLightbox(i)}
+                className={getMosaicClass(i)}
               />
             ))}
+          </div>
+        )}
+
+        {GALLERY_DRIVE_LINK !== "PASTE_GOOGLE_DRIVE_LINK_HERE" && (
+          <div className="mt-10 sm:mt-12 flex justify-center">
+            <a
+              href={GALLERY_DRIVE_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-full border-2 border-bcn-orange bg-transparent px-6 py-3 text-sm font-medium text-bcn-orange shadow-[0_2px_12px_rgba(255,132,0,0.1)] transition-all duration-200 hover:border-bcn-amber hover:bg-bcn-orange/10 hover:text-bcn-amber focus:outline-none focus:ring-2 focus:ring-bcn-orange/50 active:scale-[0.98] sm:text-base"
+            >
+              View Full Gallery
+            </a>
           </div>
         )}
       </div>
 
       {lightboxIndex !== null && (
         <Lightbox
-          items={media}
+          items={previewMedia}
           index={lightboxIndex}
           onClose={closeLightbox}
           onNavigate={navigateLightbox}
