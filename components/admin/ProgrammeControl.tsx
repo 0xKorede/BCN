@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
-import { PROGRAMME, ProgrammeItem } from "@/lib/constants";
+import { ProgrammeRow } from "@/lib/events";
 import { Radio, CheckCircle2, Clock, User, Sparkles, X, Loader2, AlertCircle } from "lucide-react";
 
 interface ProgrammeControlProps {
   initialCurrentItemId: number | null;
+  eventId: string;
+  items: ProgrammeRow[];
 }
 
-export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps) {
+export function ProgrammeControl({ initialCurrentItemId, eventId, items }: ProgrammeControlProps) {
   const [currentLiveId, setCurrentLiveId] = useState<number | null>(initialCurrentItemId);
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const currentLiveItem = PROGRAMME.find((item) => item.id === currentLiveId);
+  const currentLiveItem = items.find((item) => item.display_order === currentLiveId);
 
   const handleToggleLive = async (itemId: number) => {
     // If already live, clicking it sets to null (clear). Otherwise set to this itemId.
@@ -29,7 +31,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
       const res = await fetch("/api/admin/programme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ current_item_id: newTargetId }),
+        body: JSON.stringify({ current_item_id: newTargetId, event_id: eventId }),
       });
 
       if (!res.ok) {
@@ -61,7 +63,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
       const res = await fetch("/api/admin/programme", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ current_item_id: null }),
+        body: JSON.stringify({ current_item_id: null, event_id: eventId }),
       });
 
       if (!res.ok) {
@@ -108,7 +110,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
 
             {currentLiveItem ? (
               <p className="text-base sm:text-lg font-bold text-white mt-0.5 leading-snug">
-                #{currentLiveItem.number} {currentLiveItem.title}
+                #{String(currentLiveItem.display_order).padStart(2, "0")} {currentLiveItem.title}
                 {currentLiveItem.presenter && (
                   <span className="text-[#A39C90] text-sm font-normal ml-2">
                     — {currentLiveItem.presenter}
@@ -154,10 +156,11 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
         </div>
 
         <div className="space-y-2.5">
-          {PROGRAMME.map((item, index) => {
-            const isLive = currentLiveId === item.id;
-            const isCompleted = currentLiveId !== null && item.id < currentLiveId;
-            const isPending = updatingId === item.id;
+          {items.map((item, index) => {
+            const itemId = item.display_order;
+              const isLive = currentLiveId === itemId;
+            const isCompleted = currentLiveId !== null && itemId < currentLiveId;
+            const isPending = updatingId === itemId;
 
             return (
               <div
@@ -182,7 +185,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
                         : "bg-white/5 text-[#DFD8CE] border-white/10"
                     }`}
                   >
-                    {item.number}
+                    {String(itemId).padStart(2, "0")}
                   </div>
 
                   {/* Title & Presenter */}
@@ -222,7 +225,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
                       )}
                       <span className="flex items-center gap-1 text-[#8C857B]">
                         <Clock className="w-3 h-3 text-[#7C756B]" />
-                        {item.durationLabel}
+                        {item.duration_minutes} mins
                       </span>
                     </div>
                   </div>
@@ -232,7 +235,7 @@ export function ProgrammeControl({ initialCurrentItemId }: ProgrammeControlProps
                 <div className="sm:shrink-0 pt-1 sm:pt-0">
                   <button
                     type="button"
-                    onClick={() => handleToggleLive(item.id)}
+                    onClick={() => handleToggleLive(itemId)}
                     disabled={isPending}
                     className={`w-full sm:w-auto min-w-[170px] min-h-[46px] px-5 py-3 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all duration-200 active:scale-95 shadow-md ${
                       isLive

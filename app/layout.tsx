@@ -86,13 +86,6 @@ export const metadata: Metadata = {
         alt: "BCN Hangout 2026 - Creators with a Difference featuring Samuel Oboh, T-Spice, Favour Jigah, Gideon Bello, and Pst. Stephen Yusuf",
         type: "image/jpeg",
       },
-      {
-        url: "/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Building Creatives Network Hangout 2026 Preview",
-        type: "image/png",
-      },
     ],
     locale: "en_US",
     type: "website",
@@ -102,8 +95,6 @@ export const metadata: Metadata = {
     title: "BCN Hangout 2026 | Creators with a Difference",
     description:
       "Join innovators, designers, developers & digital creators in Lokoja on September 19, 2026. Practical skills, networking, and spiritual impact.",
-    site: "@bcnetwork",
-    creator: "@bcnetwork",
     images: [
       {
         url: "/og-image.jpg",
@@ -207,8 +198,10 @@ export default function RootLayout({
         "url": SITE_URL,
         "logo": `${SITE_URL}/images/logo/bcn-logo-transparent.png`,
         "sameAs": [
-          "https://instagram.com/bcnetwork",
-          "https://twitter.com/bcnetwork",
+          "https://youtube.com/@buildingcreativesnetwork?si=hQabV1Tpvs4-ZXr0",
+          "https://www.facebook.com/share/1C47CfKY8U/?mibextid=wwXIfr",
+          "https://www.instagram.com/building_creatives_network?igsi=MXFvcmp1enBrN211bg==",
+          "https://www.tiktok.com/@buildingcreatives?_r=1&_t=ZS-99MvHEPBEuH",
         ],
       },
     ],

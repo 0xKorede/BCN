@@ -4,7 +4,16 @@ import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { Instagram, Twitter, Linkedin } from "lucide-react";
-import { HOST, SPEAKERS, SpeakerEntry } from "@/lib/constants";
+import { EventSpeaker } from "@/lib/events";
+
+type SpeakerEntry = {
+  id: string;
+  name: string;
+  role: "Host" | "Speaker";
+  photo: string;
+  bio: string;
+  socials: { instagram?: string; twitter?: string; linkedin?: string };
+};
 
 // ─── Placeholder avatar (no photo) ───────────────────────────────────────────
 function AvatarPlaceholder({ name, large = false }: { name: string; large?: boolean }) {
@@ -171,7 +180,17 @@ function SpeakerCard({ entry, delay = 0 }: { entry: SpeakerEntry; delay?: number
 }
 
 // ─── Section ──────────────────────────────────────────────────────────────────
-export const Speakers: React.FC = () => {
+export const Speakers: React.FC<{ entries: EventSpeaker[] }> = ({ entries }) => {
+  const mapped: SpeakerEntry[] = entries.map((entry) => ({
+    id: entry.id,
+    name: entry.name,
+    role: entry.role === "host" ? "Host" : "Speaker",
+    photo: entry.photo_url || "",
+    bio: entry.bio,
+    socials: {},
+  }));
+  const host = mapped.find((entry) => entry.role === "Host");
+  const speakers = mapped.filter((entry) => entry.role === "Speaker");
   return (
     <section id="speakers" className="py-24 bg-bcn-black relative overflow-hidden">
       {/* Background accent */}
@@ -204,12 +223,12 @@ export const Speakers: React.FC = () => {
 
         {/* ── Featured host ── */}
         <div className="mb-10 sm:mb-12">
-          <HostCard entry={HOST} />
+          {host && <HostCard entry={host} />}
         </div>
 
         {/* ── Speaker grid — 2×2 on tablet/desktop ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
-          {SPEAKERS.map((speaker, i) => (
+          {speakers.map((speaker, i) => (
             <SpeakerCard key={speaker.id} entry={speaker} delay={i * 0.08} />
           ))}
         </div>

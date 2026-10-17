@@ -2,13 +2,14 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Lock, ArrowRight, Loader2, ShieldCheck } from "lucide-react";
+import { Lock, ArrowRight, Loader2, ShieldCheck, Eye, EyeOff } from "lucide-react";
 
 export function AdminLoginForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ export function AdminLoginForm() {
       const data = await res.json();
 
       if (res.ok && data.success) {
+        router.replace("/dashboard");
         router.refresh();
       } else {
         setError(data.message || "Incorrect password. Access denied.");
@@ -74,15 +76,27 @@ export function AdminLoginForm() {
             <label className="block text-xs font-semibold text-[#DFD8CE] uppercase tracking-wider mb-2">
               Staff Password
             </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter password..."
-              autoFocus
-              required
-              className="w-full bg-[#0A0A0A] border border-white/15 rounded-xl px-4 py-3 text-sm text-white placeholder-[#6C665D] focus:outline-none focus:border-bcn-orange transition-colors"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter password..."
+                autoFocus
+                required
+                className="w-full bg-[#0A0A0A] border border-white/15 rounded-xl pl-4 pr-12 py-3 text-sm text-white placeholder-[#6C665D] focus:outline-none focus:border-bcn-orange transition-colors"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword((visible) => !visible)}
+                className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-[#8C857B] transition-colors hover:text-bcn-amber focus:outline-none focus:text-bcn-amber"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-pressed={showPassword}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <EyeOff className="h-[18px] w-[18px]" /> : <Eye className="h-[18px] w-[18px]" />}
+              </button>
+            </div>
           </div>
 
           <button

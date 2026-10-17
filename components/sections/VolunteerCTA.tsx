@@ -1,43 +1,88 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Heart, ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
 
-export function VolunteerCTA() {
+export function VolunteerCTA({ images = [] }: { images?: string[] }) {
+  const displayImages = images.filter(Boolean);
+  const [activeImage, setActiveImage] = useState(0);
+
+  useEffect(() => {
+    if (displayImages.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveImage((current) => {
+        let next = current;
+        while (next === current) next = Math.floor(Math.random() * displayImages.length);
+        return next;
+      });
+    }, 4500);
+    return () => window.clearInterval(timer);
+  }, [displayImages.length]);
+
   return (
-    <section className="bg-bcn-black py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[200px] bg-bcn-orange/5 rounded-full blur-[80px]" />
-      </div>
-
-      <div className="max-w-4xl mx-auto relative">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 bg-[#141414] border border-white/10 rounded-2xl px-6 sm:px-10 py-7 sm:py-8 shadow-[0_4px_30px_rgba(0,0,0,0.5)]">
-
-          {/* Left — icon + text */}
-          <div className="flex items-start sm:items-center gap-4">
-            <div className="w-10 h-10 rounded-xl bg-bcn-orange/10 border border-bcn-orange/30 flex items-center justify-center shrink-0 mt-0.5 sm:mt-0">
-              <Heart className="w-5 h-5 text-bcn-orange" />
+    <section id="volunteer" className="relative overflow-hidden bg-bcn-black px-4 py-20 sm:px-6 sm:py-24 lg:px-8">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[420px] w-[760px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bcn-orange/10 blur-[130px]" />
+      <div className="relative mx-auto max-w-7xl overflow-hidden rounded-[2rem] border border-bcn-orange/20 bg-[#111111] shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
+        <div className="grid items-stretch lg:grid-cols-[1.05fr_.95fr]">
+          <div className="relative z-10 flex flex-col justify-center px-6 py-12 sm:px-10 lg:px-14 lg:py-16">
+            <div className="mb-6 inline-flex w-fit rounded-full border border-bcn-orange/30 bg-bcn-orange/10 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.2em] text-bcn-amber">
+              Volunteer with BCN
             </div>
-            <div>
-              <p className="text-[11px] font-bold uppercase tracking-widest text-bcn-orange mb-0.5">
-                Volunteer with BCN
-              </p>
-              <h3 className="text-lg sm:text-xl font-bold text-white leading-snug">
-                Be part of the team behind every BCN experience
-              </h3>
-              <p className="text-sm text-[#A39C90] mt-1">
-                We're always looking for passionate people to help organize, support, and grow everything we do.
-              </p>
+            <h2 className="max-w-xl text-3xl font-extrabold leading-tight text-[#F5F1E8] sm:text-4xl md:text-5xl">
+              Want to be part of <span className="bg-bcn-gradient bg-clip-text text-transparent">something meaningful?</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-sm leading-relaxed text-[#BFB9B0] sm:text-base">
+              Join the people who turn BCN ideas into unforgettable experiences. Bring your energy, creativity, and heart. We’ll build, serve, learn, and make an impact together.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold uppercase tracking-wider text-[#A39C90]">
+              <span>Find your people</span><span className="h-1 w-1 rounded-full bg-bcn-orange" />
+              <span>Build real experience</span><span className="h-1 w-1 rounded-full bg-bcn-orange" />
+              <span>Create lasting impact</span>
             </div>
+            <Link href="/volunteer" className="group mt-9 inline-flex w-fit items-center gap-2 rounded-xl bg-bcn-gradient px-7 py-3.5 text-sm font-bold text-black shadow-[0_5px_28px_rgba(255,132,0,0.3)] transition-transform hover:-translate-y-0.5">
+              Join the BCN volunteer team <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
-
-          {/* Right — CTA button */}
-          <Link
-            href="/volunteer"
-            className="shrink-0 inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-black bg-bcn-orange hover:bg-bcn-amber transition-all shadow-[0_4px_20px_rgba(255,132,0,0.3)] hover:shadow-[0_4px_25px_rgba(255,132,0,0.45)] group whitespace-nowrap"
-          >
-            Apply to Volunteer
-            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-          </Link>
+          <div className="relative min-h-[380px] overflow-hidden border-t border-white/10 bg-black lg:min-h-[560px] lg:border-l lg:border-t-0">
+            {displayImages.length > 0 ? (
+              <>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={displayImages[activeImage]}
+                    initial={{ opacity: 0, scale: 1.025 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="absolute inset-0 flex items-center justify-center p-4 sm:p-6"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={displayImages[activeImage]}
+                      alt="A moment from a previous BCN event"
+                      className="h-full w-full rounded-[2rem] object-contain object-center"
+                      loading="lazy"
+                    />
+                  </motion.div>
+                </AnimatePresence>
+                {displayImages.length > 1 && (
+                  <div className="absolute bottom-6 left-1/2 z-20 flex -translate-x-1/2 gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-2 backdrop-blur-md">
+                    {displayImages.map((src, index) => (
+                      <button
+                        key={`${src}-${index}`}
+                        type="button"
+                        aria-label={`Show event photo ${index + 1}`}
+                        onClick={() => setActiveImage(index)}
+                        className={`h-1.5 rounded-full transition-all ${index === activeImage ? "w-7 bg-bcn-orange" : "w-1.5 bg-white/45 hover:bg-white/75"}`}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : <div className="absolute inset-0 bg-[radial-gradient(#FF8400_1px,transparent_1px)] [background-size:28px_28px] opacity-20" />}
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(0,0,0,.32)_100%)]" />
+          </div>
         </div>
       </div>
     </section>

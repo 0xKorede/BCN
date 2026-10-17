@@ -23,9 +23,10 @@ interface FileUploadState {
 
 interface GalleryUploadProps {
   initialMedia: MediaRow[];
+  eventId: string;
 }
 
-export function GalleryUpload({ initialMedia }: GalleryUploadProps) {
+export function GalleryUpload({ initialMedia, eventId }: GalleryUploadProps) {
   const router = useRouter();
   const [uploadedMedia, setUploadedMedia] = useState<MediaRow[]>(initialMedia);
   const [caption, setCaption] = useState("");
@@ -97,6 +98,7 @@ export function GalleryUpload({ initialMedia }: GalleryUploadProps) {
 
       const fileState = fileStates[idx];
       const fd = new FormData();
+      fd.append("eventId", eventId);
       fd.append("file", fileState.file);
       if (caption.trim()) fd.append("caption", caption.trim());
 

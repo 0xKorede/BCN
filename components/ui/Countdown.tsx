@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { EVENT_TARGET_DATE, EVENT_HAS_ENDED } from "@/lib/constants";
 import { CheckCircle2 } from "lucide-react";
 
 interface TimeLeft {
@@ -11,8 +10,8 @@ interface TimeLeft {
   seconds: number;
 }
 
-function getTimeLeft(): TimeLeft | null {
-  const diff = EVENT_TARGET_DATE.getTime() - Date.now();
+function getTimeLeft(target: Date): TimeLeft | null {
+  const diff = target.getTime() - Date.now();
   if (diff <= 0) return null;
   return {
     days: Math.floor(diff / (1000 * 60 * 60 * 24)),
@@ -33,21 +32,22 @@ const SEGMENTS = [
   { key: "seconds" as const, label: "Sec" },
 ];
 
-export const Countdown: React.FC = () => {
+export const Countdown: React.FC<{ target?: string; concluded?: boolean }> = ({ target = new Date(0).toISOString(), concluded = false }) => {
   // Start as null on the server to avoid hydration mismatch
   const [timeLeft, setTimeLeft] = useState<TimeLeft | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    if (EVENT_HAS_ENDED) return;
+    if (concluded) return;
 
-    setTimeLeft(getTimeLeft());
+    const targetDate = new Date(target);
+    setTimeLeft(getTimeLeft(targetDate));
     const id = setInterval(() => {
-      setTimeLeft(getTimeLeft());
+      setTimeLeft(getTimeLeft(targetDate));
     }, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [target, concluded]);
 
   // Render nothing until mounted (avoids hydration mismatch on SSR)
   if (!mounted) {
@@ -57,7 +57,7 @@ export const Countdown: React.FC = () => {
   }
 
   // Event has concluded — static post-event card state
-  if (EVENT_HAS_ENDED) {
+  if (concluded) {
     return (
       <div
         className={[

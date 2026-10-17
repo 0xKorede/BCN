@@ -19,13 +19,20 @@ export async function POST(request: Request) {
     }
     const { name, email, role, whatsapp } = validationResult.data;
 
+    const supabase = getSupabaseAdmin();
+    let eventQuery = supabase.from("events").select("id, status, is_paid");
+    eventQuery = body.eventId ? eventQuery.eq("id", body.eventId) : eventQuery.eq("slug", body.eventSlug || "");
+    const { data: event, error: eventError } = await eventQuery.maybeSingle();
+    if (eventError || !event) return NextResponse.json({ success: false, message: "Event not found." }, { status: 404 });
+    if (event.status !== "upcoming") return NextResponse.json({ success: false, message: "Registration is closed for this event." }, { status: 403 });
+    if (event.is_paid) return NextResponse.json({ success: false, message: "This paid event requires checkout." }, { status: 403 });
+
     // ── 2. Generate ticket ID (8-char uppercase alphanumeric) ─────────────────
     const { customAlphabet } = await import("nanoid");
     const nanoid = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 8);
     const ticketId = nanoid();
 
     // ── 3. Save to Supabase ───────────────────────────────────────────────────
-    const supabase = getSupabaseAdmin();
     const insertPayload: Record<string, any> = {
       name,
       email,
@@ -33,6 +40,7 @@ export async function POST(request: Request) {
       whatsapp,
       ticket_id: ticketId,
       checked_in: false,
+      event_id: event.id,
     };
 
     let { error: dbError } = await supabase.from("registrations").insert(insertPayload);

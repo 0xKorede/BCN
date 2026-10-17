@@ -160,7 +160,7 @@ function GridItem({ item, onClick, className = "" }: GridItemProps) {
             preload="metadata"
             muted
             playsInline
-            className="w-full h-full object-cover block"
+            className="w-full h-full object-cover object-center block"
           />
           <div className="absolute inset-0 flex items-center justify-center bg-black/30 group-hover:bg-black/10 transition-colors">
             <div className="w-12 h-12 rounded-full bg-black/60 border border-white/30 flex items-center justify-center backdrop-blur-sm
@@ -174,7 +174,7 @@ function GridItem({ item, onClick, className = "" }: GridItemProps) {
         <img
           src={item.url}
           alt={item.caption ?? "Live moment"}
-          className="w-full h-full object-cover block"
+          className="w-full h-full object-cover object-center block"
           loading="lazy"
         />
       )}

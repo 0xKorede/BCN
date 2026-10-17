@@ -6,6 +6,7 @@ import { Registration, Volunteer, MediaItem, TeamMember } from "@/lib/supabase";
 import { GalleryUpload } from "@/components/admin/GalleryUpload";
 import { ProgrammeControl } from "@/components/admin/ProgrammeControl";
 import { TeamManagement } from "@/components/admin/TeamManagement";
+import { EventRow, ProgrammeRow } from "@/lib/events";
 import {
   Search,
   CheckCircle2,
@@ -32,6 +33,9 @@ interface AdminClientProps {
   initialVolunteers: Volunteer[];
   initialCurrentItemId?: number | null;
   initialTeamMembers?: TeamMember[];
+  events: EventRow[];
+  selectedEvent: EventRow | null;
+  programmeItems: ProgrammeRow[];
 }
 
 export function AdminClient({
@@ -40,6 +44,9 @@ export function AdminClient({
   initialVolunteers,
   initialCurrentItemId = null,
   initialTeamMembers = [],
+  events,
+  selectedEvent,
+  programmeItems,
 }: AdminClientProps) {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<"registrations" | "volunteers" | "gallery" | "programme" | "team">("registrations");
@@ -183,6 +190,7 @@ export function AdminClient({
     setIsLoggingOut(true);
     try {
       await fetch("/api/admin/logout", { method: "POST" });
+      router.replace("/dashboard/login");
       router.refresh();
     } catch (err) {
       console.error(err);
@@ -239,6 +247,7 @@ export function AdminClient({
   return (
     <div className="min-h-screen bg-[#0E0E0E] text-[#F5F1E8] p-4 sm:p-6 lg:p-8 font-sans">
       <div className="max-w-7xl mx-auto space-y-6">
+        <div className="rounded-xl border border-white/10 bg-[#171717] p-4"><label className="text-xs uppercase tracking-widest text-bcn-orange">Selected event</label><select value={selectedEvent?.slug ?? ""} onChange={e => router.push(`/dashboard?event=${e.target.value}`)} className="mt-2 w-full rounded-lg border border-white/10 bg-[#0E0E0E] p-3 text-white">{events.map(event => <option key={event.id} value={event.slug}>{event.theme} — {event.event_date}</option>)}</select></div>
 
         {/* ── Top Header ── */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/10">
@@ -712,7 +721,7 @@ export function AdminClient({
                 <p className="text-xs text-[#5C564E]">Photos and videos appear on the public page within seconds</p>
               </div>
             </div>
-            <GalleryUpload initialMedia={initialMedia} />
+            <GalleryUpload initialMedia={initialMedia} eventId={selectedEvent?.id ?? ""} />
           </div>
         )}
 
@@ -730,7 +739,7 @@ export function AdminClient({
                 </p>
               </div>
             </div>
-            <ProgrammeControl initialCurrentItemId={initialCurrentItemId} />
+            <ProgrammeControl initialCurrentItemId={initialCurrentItemId} eventId={selectedEvent?.id ?? ""} items={programmeItems} />
           </div>
         )}
 

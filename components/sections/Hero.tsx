@@ -128,7 +128,7 @@ export const Hero: React.FC = () => {
                 </Button>
               </a>
               <a
-                href="https://www.instagram.com/building_creatives_network"
+                href="https://www.instagram.com/building_creatives_network?igsi=MXFvcmp1enBrN211bg=="
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto"

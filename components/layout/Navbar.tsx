@@ -5,13 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { BcnLogo } from "@/components/ui/BcnLogo";
 import { Button } from "@/components/ui/Button";
-import { NAV_LINKS } from "@/lib/constants";
 import { Menu, X } from "lucide-react";
 
-export const Navbar: React.FC = () => {
+interface NavbarProps { upcomingSlug?: string; variant?: "org" | "event"; eventPast?: boolean }
+export const Navbar: React.FC<NavbarProps> = ({ upcomingSlug, variant = "org", eventPast = false }) => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const links = variant === "event"
+    ? [{label:"Home",href:"/"},{label:"All Events",href:"/events"},{label:"Speakers",href:"#speakers"},{label:"Schedule",href:"#schedule"},{label:"Register",href:"#register"}]
+    : [{label:"About",href:"#about"},{label:"Events",href:"#events"},{label:"Team",href:"#team"},{label:"Volunteer",href:"#volunteer"}];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,7 +69,7 @@ export const Navbar: React.FC = () => {
 
           {/* Center: Nav links (Desktop) */}
           <nav className="hidden md:flex items-center gap-8">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <a
                 key={link.label}
                 href={getHref(link.href)}
@@ -79,11 +82,13 @@ export const Navbar: React.FC = () => {
 
           {/* Right: Register Button + Mobile Hamburger */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0 mr-1 sm:mr-2">
-            <a href="/register" onClick={handleRegisterClick}>
+            {variant === "event" && !eventPast ? <a href="#register">
+              <Button variant="primary" size="sm" className="hidden sm:inline-flex">Register</Button>
+            </a> : upcomingSlug && <a href={`/events/${upcomingSlug}`}>
               <Button variant="primary" size="sm" className="hidden sm:inline-flex">
-                Register
+                Upcoming Event
               </Button>
-            </a>
+            </a>}
 
             {/* Mobile menu toggle */}
             <button
@@ -101,7 +106,7 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden w-full max-w-6xl mt-3 rounded-3xl pointer-events-auto bg-black/15 backdrop-blur-2xl backdrop-saturate-150 border border-white/10 p-5 shadow-[0_12px_40px_rgba(0,0,0,0.4)] space-y-4 animate-fadeIn">
           <nav className="flex flex-col gap-3">
-            {NAV_LINKS.map((link) => (
+            {links.map((link) => (
               <a
                 key={link.label}
                 href={getHref(link.href)}
@@ -112,19 +117,13 @@ export const Navbar: React.FC = () => {
               </a>
             ))}
           </nav>
-          <div className="pt-2">
-            <a
-              href="/register"
-              onClick={(e) => {
-                setMobileMenuOpen(false);
-                handleRegisterClick(e);
-              }}
-            >
+          {((variant === "event" && !eventPast) || upcomingSlug) && <div className="pt-2">
+            <a href={variant === "event" ? "#register" : `/events/${upcomingSlug}`} onClick={() => setMobileMenuOpen(false)}>
               <Button variant="primary" size="md" fullWidth>
-                Register Now
+                {variant === "event" ? "Register Now" : "Upcoming Event"}
               </Button>
             </a>
-          </div>
+          </div>}
         </div>
       )}
     </header>

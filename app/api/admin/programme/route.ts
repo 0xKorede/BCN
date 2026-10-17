@@ -39,6 +39,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const current_item_id =
       typeof body.current_item_id === "number" ? body.current_item_id : null;
+    const event_id = typeof body.event_id === "string" ? body.event_id : null;
+    if (!event_id) return NextResponse.json({ error: "Event is required" }, { status: 400 });
 
     const supabase = getSupabaseAdmin();
 
@@ -46,11 +48,11 @@ export async function POST(req: NextRequest) {
       .from("event_status")
       .upsert(
         {
-          id: 1,
+          event_id,
           current_item_id,
           updated_at: new Date().toISOString(),
         },
-        { onConflict: "id" }
+        { onConflict: "event_id" }
       );
 
     if (error) {

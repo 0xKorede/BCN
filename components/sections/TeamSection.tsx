@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { getSupabasePublic, TeamMember } from "@/lib/supabase";
 
@@ -21,13 +21,16 @@ function AvatarPlaceholder({ name }: { name: string }) {
 }
 
 function TeamMemberCard({ member, index }: { member: TeamMember; index: number }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isLongBio = member.bio.length > 120;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4, delay: (index % 4) * 0.08 }}
-      className="group bg-[#1A1A1A] border border-[#262626] hover:border-bcn-orange/50 rounded-2xl overflow-hidden transition-all duration-300 shadow-md hover:shadow-[0_0_30px_rgba(255,132,0,0.12)] hover:-translate-y-1 flex flex-col"
+      className="group flex min-w-[52vw] max-w-[230px] snap-start flex-col overflow-hidden rounded-2xl border border-[#262626] bg-[#1A1A1A] shadow-md transition-all duration-300 hover:-translate-y-1 hover:border-bcn-orange/50 hover:shadow-[0_0_30px_rgba(255,132,0,0.12)] sm:max-w-none sm:min-w-0"
     >
       {/* Photo / Avatar Placeholder */}
       <div className="relative w-full aspect-square overflow-hidden bg-[#141414]">
@@ -51,9 +54,19 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
         <h3 className="text-sm sm:text-base md:text-lg font-bold text-[#F5F1E8] tracking-tight leading-snug">
           {member.name}
         </h3>
-        <p className="text-xs sm:text-sm text-[#BFB9B0] leading-relaxed line-clamp-3 font-normal">
+        <p className={`text-xs sm:text-sm text-[#BFB9B0] leading-relaxed font-normal ${isExpanded ? "" : "line-clamp-3"}`}>
           {member.bio}
         </p>
+        {isLongBio && (
+          <button
+            type="button"
+            onClick={() => setIsExpanded((expanded) => !expanded)}
+            className="mt-1 self-start text-[11px] font-semibold text-bcn-orange transition-colors hover:text-bcn-amber focus:outline-none focus:text-bcn-amber"
+            aria-expanded={isExpanded}
+          >
+            {isExpanded ? "Show less" : "Read more"}
+          </button>
+        )}
       </div>
     </motion.div>
   );
@@ -62,6 +75,7 @@ function TeamMemberCard({ member, index }: { member: TeamMember; index: number }
 export function TeamSection() {
   const [members, setMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -93,6 +107,22 @@ export function TeamSection() {
       isMounted = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (members.length < 2) return;
+    let current = 0;
+    const timer = window.setInterval(() => {
+      if (!window.matchMedia("(max-width: 639px)").matches) return;
+      const carousel = carouselRef.current;
+      if (!carousel) return;
+      current = (current + 1) % members.length;
+      const card = carousel.children[current] as HTMLElement | undefined;
+      if (card) {
+        carousel.scrollTo({ left: card.offsetLeft - 16, behavior: "smooth" });
+      }
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [members.length]);
 
   // EMPTY STATE: If no team members exist or still fetching, hide the section entirely
   if (loading || members.length === 0) {
@@ -128,8 +158,8 @@ export function TeamSection() {
           </p>
         </motion.div>
 
-        {/* Responsive Grid: 2 columns on mobile, 3 on tablet, 4 on desktop */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+        {/* Horizontal swipe row on mobile; responsive grid from tablet upward */}
+        <div ref={carouselRef} className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 md:grid-cols-3 lg:grid-cols-4">
           {members.map((member, index) => (
             <TeamMemberCard key={member.id} member={member} index={index} />
           ))}

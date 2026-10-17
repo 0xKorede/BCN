@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { getSupabaseAdmin, Registration, MediaItem, Volunteer, TeamMember } from "@/lib/supabase";
 import { AdminClient } from "./AdminClient";
 import { AdminLoginForm } from "./AdminLoginForm";
+import { EventRow, ProgrammeRow } from "@/lib/events";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -11,7 +12,7 @@ const SESSION_VALUE = "authenticated";
 
 type MediaRow = MediaItem & { storage_key?: string };
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: { searchParams: { event?: string } }) {
   const session = cookies().get(SESSION_COOKIE);
   const isAuthenticated = session?.value === SESSION_VALUE;
 
@@ -24,18 +25,27 @@ export default async function AdminPage() {
   let volunteers: Volunteer[] = [];
   let initialCurrentItemId: number | null = null;
   let initialTeamMembers: TeamMember[] = [];
+  let events: EventRow[] = [];
+  let selectedEvent: EventRow | null = null;
+  let programmeItems: ProgrammeRow[] = [];
 
   try {
     const supabase = getSupabaseAdmin();
 
-    const [regResult, mediaResult, volResult, statusResult, teamResult] = await Promise.all([
+    const { data: eventRows } = await supabase.from("events").select("*").order("event_date", { ascending: true });
+    events = (eventRows ?? []) as EventRow[];
+    selectedEvent = events.find(e => e.slug === searchParams.event) ?? events.find(e => e.status === "upcoming") ?? [...events].reverse().find(e => e.status === "past") ?? null;
+    const eventId = selectedEvent?.id ?? "00000000-0000-0000-0000-000000000000";
+    const [regResult, mediaResult, volResult, statusResult, teamResult, programmeResult] = await Promise.all([
       supabase
         .from("registrations")
         .select("*")
+        .eq("event_id", eventId)
         .order("created_at", { ascending: false }),
       supabase
         .from("media")
         .select("*")
+        .eq("event_id", eventId)
         .order("uploaded_at", { ascending: false }),
       supabase
         .from("volunteers")
@@ -44,13 +54,14 @@ export default async function AdminPage() {
       supabase
         .from("event_status")
         .select("current_item_id")
-        .eq("id", 1)
+        .eq("event_id", eventId)
         .maybeSingle(),
       supabase
         .from("team_members")
         .select("*")
         .order("display_order", { ascending: true })
         .order("created_at", { ascending: true }),
+      supabase.from("programme_items").select("*").eq("event_id", eventId).order("display_order"),
     ]);
 
     if (regResult.error) {
@@ -80,6 +91,7 @@ export default async function AdminPage() {
     } else if (teamResult.data) {
       initialTeamMembers = teamResult.data as TeamMember[];
     }
+    programmeItems = (programmeResult.data ?? []) as ProgrammeRow[];
   } catch (err) {
     console.error("[BCN Admin] Supabase connection error:", err);
   }
@@ -91,6 +103,9 @@ export default async function AdminPage() {
       initialVolunteers={volunteers}
       initialCurrentItemId={initialCurrentItemId}
       initialTeamMembers={initialTeamMembers}
+      events={events}
+      selectedEvent={selectedEvent}
+      programmeItems={programmeItems}
     />
   );
 }

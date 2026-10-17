@@ -8,13 +8,16 @@ import { User, Mail, Phone, Briefcase, CheckCircle2, Sparkles, Loader2 } from "l
 import { registrationSchema, RegistrationFormValues } from "@/lib/validations";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { EVENT_DATE, EVENT_VENUE, EVENT_HAS_ENDED } from "@/lib/constants";
 
 interface RegistrationFormProps {
   className?: string;
+  event: { id: string; slug: string; theme: string; event_date: string; venue: string; status: string; is_paid: boolean };
 }
 
-export const RegistrationForm: React.FC<RegistrationFormProps> = ({ className = "" }) => {
+export const RegistrationForm: React.FC<RegistrationFormProps> = ({ className = "", event }) => {
+  const EVENT_HAS_ENDED = event.status === "past";
+  const EVENT_DATE = new Date(`${event.event_date}T00:00:00+01:00`).toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+  const EVENT_VENUE = event.venue;
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState("");
   const [apiError, setApiError] = useState<string | null>(null);
@@ -42,7 +45,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ className = 
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, eventId: event.id, eventSlug: event.slug }),
       });
 
       const result = await response.json();
@@ -103,6 +106,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ className = 
                 </p>
               </div>
             </motion.div>
+          ) : event.is_paid ? (
+            <div className="py-12 text-center"><h3 className="text-2xl font-bold">Ticket sales opening soon</h3><p className="mt-3 text-[#DFD8CE]">Online checkout for this event will be available shortly.</p></div>
           ) : isSubmitted ? (
             /* Success State */
             <motion.div

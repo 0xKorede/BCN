@@ -1,5 +1,5 @@
 import React from "react";
-import { Instagram, Facebook } from "lucide-react";
+import { Instagram, Facebook, Youtube } from "lucide-react";
 import { BcnLogo } from "@/components/ui/BcnLogo";
 
 function TikTokIcon({ className = "w-4 h-4" }: { className?: string }) {
@@ -20,19 +20,24 @@ function TikTokIcon({ className = "w-4 h-4" }: { className?: string }) {
 
 const FOOTER_SOCIALS = [
   {
-    href: "https://www.instagram.com/building_creatives_network",
-    label: "Instagram",
+    href: "https://youtube.com/@buildingcreativesnetwork?si=hQabV1Tpvs4-ZXr0",
+    label: "Subscribe to BCN on YouTube",
+    Icon: Youtube,
+  },
+  {
+    href: "https://www.facebook.com/share/1C47CfKY8U/?mibextid=wwXIfr",
+    label: "Follow BCN on Facebook",
+    Icon: Facebook,
+  },
+  {
+    href: "https://www.instagram.com/building_creatives_network?igsi=MXFvcmp1enBrN211bg==",
+    label: "Follow BCN on Instagram",
     Icon: Instagram,
   },
   {
-    href: "https://www.tiktok.com/%40buildingcreatives",
-    label: "TikTok",
+    href: "https://www.tiktok.com/@buildingcreatives?_r=1&_t=ZS-99MvHEPBEuH",
+    label: "Follow BCN on TikTok",
     Icon: TikTokIcon,
-  },
-  {
-    href: "https://www.facebook.com/share/1C47CfKY8U",
-    label: "Facebook",
-    Icon: Facebook,
   },
 ];
 
@@ -57,7 +62,7 @@ export const Footer: React.FC = () => {
             © {new Date().getFullYear()} Building Creatives Network (BCN). All rights reserved.
           </p>
 
-          {/* Social icons: Instagram, TikTok, Facebook */}
+          {/* Social icons: YouTube, Facebook, Instagram, TikTok */}
           <div className="flex items-center gap-3 shrink-0">
             {FOOTER_SOCIALS.map(({ href, label, Icon }) => (
               <a

@@ -17,8 +17,9 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
     const file = formData.get("file") as File | null;
     const caption = (formData.get("caption") as string | null) ?? null;
+    const eventId = formData.get("eventId") as string | null;
 
-    if (!file) {
+    if (!file || !eventId) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
@@ -56,6 +57,7 @@ export async function POST(req: NextRequest) {
         type: mediaType,
         caption: caption || null,
         uploaded_at: new Date().toISOString(),
+        event_id: eventId,
       })
       .select()
       .single();

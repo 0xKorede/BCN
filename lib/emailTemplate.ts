@@ -131,9 +131,10 @@ export function generateConfirmationEmail({
             <td style="padding:20px 32px;border-top:1px solid rgba(255,255,255,0.06);">
               <p style="margin:0;font-size:12px;color:#5A5550;text-align:center;">
                 Follow us:
-                <a href="https://www.instagram.com/building_creatives_network" style="color:#FF8400;text-decoration:none;">Instagram</a> &nbsp;·&nbsp;
-                <a href="https://www.tiktok.com/@buildingcreatives" style="color:#FF8400;text-decoration:none;">TikTok</a> &nbsp;·&nbsp;
-                <a href="https://www.facebook.com/share/1C47CfKY8U" style="color:#FF8400;text-decoration:none;">Facebook</a>
+                <a href="https://youtube.com/@buildingcreativesnetwork?si=hQabV1Tpvs4-ZXr0" style="color:#FF8400;text-decoration:none;">YouTube</a> &nbsp;·&nbsp;
+                <a href="https://www.facebook.com/share/1C47CfKY8U/?mibextid=wwXIfr" style="color:#FF8400;text-decoration:none;">Facebook</a> &nbsp;·&nbsp;
+                <a href="https://www.instagram.com/building_creatives_network?igsi=MXFvcmp1enBrN211bg==" style="color:#FF8400;text-decoration:none;">Instagram</a> &nbsp;·&nbsp;
+                <a href="https://www.tiktok.com/@buildingcreatives?_r=1&amp;_t=ZS-99MvHEPBEuH" style="color:#FF8400;text-decoration:none;">TikTok</a>
               </p>
               <p style="margin:8px 0 0;font-size:11px;color:#3A3530;text-align:center;">
                 © 2026 Building Creatives Network. All rights reserved.

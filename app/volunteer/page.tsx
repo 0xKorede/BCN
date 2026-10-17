@@ -21,12 +21,21 @@ export const metadata: Metadata = {
     url: "https://buildingcreativesnetwork.com/volunteer",
     siteName: "Building Creatives Network",
     type: "website",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Building Creatives Network",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Volunteer at BCN Hangout 2026 | Creators with a Difference",
     description:
       "Be part of the team behind BCN Hangout 2026 in Lokoja. Apply to volunteer today.",
+    images: ["/og-image.jpg"],
   },
 };
 
