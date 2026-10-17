@@ -39,7 +39,7 @@ export default async function Home() {
         <div className="relative max-w-4xl -translate-y-8 sm:-translate-y-5 lg:-translate-y-12"><p className="text-bcn-orange font-bold tracking-[.25em] uppercase text-sm">Building Creatives Network</p>
           <h1 className="mt-6 text-5xl sm:text-7xl font-extrabold">Where Creatives <span className="block bg-bcn-gradient bg-clip-text text-transparent">Meet &amp; Build.</span></h1>
           <p className="mx-auto mt-6 max-w-2xl text-lg text-[#DFD8CE]">A community where creators, developers, designers and innovators connect, grow their craft and build with purpose.</p>
-          <div className="mt-9 flex justify-center gap-4 flex-wrap"><Link className="rounded-xl bg-bcn-gradient px-7 py-3 font-bold text-black" href={next ? `/events/${next.slug}` : "#past-events"}>{next ? "See Upcoming Event" : "Explore Past Events"}</Link><Link className="rounded-xl border border-white/15 px-7 py-3 font-bold" href="#past-events">Past Events</Link></div>
+          <div className="mt-9 flex justify-center"><Link className="rounded-xl bg-bcn-gradient px-7 py-3 font-bold text-black" href="#events">Explore Events</Link></div>
         </div>
       </section>
       <AboutBcn />
