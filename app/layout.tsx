@@ -25,11 +25,11 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "BCN Hangout 2026 | Creators with a Difference",
+    default: "Building Creatives Network",
     template: "%s | Building Creatives Network",
   },
   description:
-    "Join digital creators, developers, designers, and innovators in Lokoja on September 19, 2026 for practical skill conversations, intentional networking, and spiritual impact at Building Creatives Network (BCN) Hangout.",
+    "A community where creators, developers, designers, and innovators connect, grow their craft, and build with purpose.",
   applicationName: "Building Creatives Network",
   authors: [{ name: "Building Creatives Network", url: SITE_URL }],
   generator: "Next.js",
@@ -73,18 +73,18 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   openGraph: {
-    title: "BCN Hangout 2026 | Creators with a Difference",
+    title: "Building Creatives Network",
     description:
-      "Join innovators, designers, developers & digital creators in Lokoja on Saturday, September 19, 2026 for practical skill conversations, intentional networking, and spiritual impact.",
+      "Where creatives meet and build. Connect with creators, developers, designers, and innovators growing their craft and building with purpose.",
     url: SITE_URL,
     siteName: "Building Creatives Network (BCN)",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "BCN Hangout 2026 - Creators with a Difference featuring Samuel Oboh, T-Spice, Favour Jigah, Gideon Bello, and Pst. Stephen Yusuf",
-        type: "image/jpeg",
+        url: "/images/logo/bcn-logo-primary.png",
+        width: 2500,
+        height: 2000,
+        alt: "Building Creatives Network logo",
+        type: "image/png",
       },
     ],
     locale: "en_US",
@@ -92,15 +92,15 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "BCN Hangout 2026 | Creators with a Difference",
+    title: "Building Creatives Network",
     description:
-      "Join innovators, designers, developers & digital creators in Lokoja on September 19, 2026. Practical skills, networking, and spiritual impact.",
+      "Where creatives meet and build. Connect, grow your craft, and build with purpose.",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "BCN Hangout 2026 Banner",
+        url: "/images/logo/bcn-logo-primary.png",
+        width: 2500,
+        height: 2000,
+        alt: "Building Creatives Network logo",
       },
     ],
   },

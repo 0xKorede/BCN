@@ -23,9 +23,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
+        url: "/images/logo/bcn-logo-primary.png",
+        width: 2500,
+        height: 2000,
         alt: "Building Creatives Network",
       },
     ],
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     title: "Volunteer at BCN Hangout 2026 | Creators with a Difference",
     description:
       "Be part of the team behind BCN Hangout 2026 in Lokoja. Apply to volunteer today.",
-    images: ["/og-image.jpg"],
+    images: ["/images/logo/bcn-logo-primary.png"],
   },
 };
 
